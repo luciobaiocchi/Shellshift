@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://menu.gd" id="1"]
+[ext_resource type="Texture2D" path="res://skyline.png" id="2"]
+
+[sub_resource type="SystemFont" id="Mono"]
+font_names = PackedStringArray("Menlo", "monospace")
+
+[sub_resource type="Theme" id="Terminal"]
+default_font = SubResource("Mono")
+default_font_size = 16
+Label/colors/font_color = Color(0.86, 0.83, 0.72, 1)
+
+[node name="Terminal" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource("Terminal")
+script = ExtResource("1")
+
+[node name="Content" type="VBoxContainer" parent="."]
+offset_left = 48
+offset_top = 28
+offset_right = 672
+theme_override_constants/separation = 12
+
+[node name="Station" type="Label" parent="Content"]
+text = "UFFICIO ASSEGNAZIONI                         / NODO 01"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.87, 0.65, 0.35, 1)
+
+[node name="Skyline" type="TextureRect" parent="Content"]
+custom_minimum_size = Vector2(0, 146)
+texture_filter = 1
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Title" type="Label" parent="Content"]
+theme_override_font_sizes/font_size = 44
+text = "SHELLSHIFT"
+
+[node name="Message" type="Label" parent="Content"]
+custom_minimum_size = Vector2(0, 60)
+autowrap_mode = 2
+text = "Matricola H-0317. Il turno inizia alla presa visione."
+
+[node name="Action" type="Button" parent="Content"]
+custom_minimum_size = Vector2(0, 40)
+text = "Inizia turno"
+
+[node name="Exit" type="Button" parent="Content"]
+flat = true
+text = "Esci"

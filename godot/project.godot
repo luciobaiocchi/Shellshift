@@ -1,0 +1,17 @@
+config_version=5
+
+[application]
+config/name="Shellshift"
+run/main_scene="res://menu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=720
+window/size/viewport_height=480
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.055, 0.075, 0.075, 1)
+textures/default_filters/use_nearest_mipmap_filter=false
