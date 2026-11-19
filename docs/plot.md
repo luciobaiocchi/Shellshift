@@ -37,3 +37,18 @@ Nel finale gli umani recuperano il controllo di una parte del proprio tempo e di
 ## Primo pezzo da valutare insieme
 
 Dal tetto dell’osservatorio alla ricevuta di presenza. Una sola sequenza, senza costruire il resto del gioco. Al primo test ci interessa capire cosa crede sia accaduto il giocatore, quale dettaglio ricorda e che effetto gli fa premere «Ho preso visione». Il nome della ricercatrice, il destino del suo corpo e la forma definitiva del finale restano aperti.
+
+## Montaggio del prologo · Bozza per la prova in Godot
+
+Il filmato d’inserimento è stato montato con reperti di provenienza diversa. Le date future appartengono alla finzione. Il diario attraversa il montaggio come una testimonianza personale. I bollettini chiamano «continuità di servizio» ciò che per la ricercatrice è la perdita di una vita.
+
+| Momento | Inquadratura | Cosa deve capire chi guarda |
+| --- | --- | --- |
+| 2026 | Profilo della ricercatrice, cupola aperta, quaderno in primo piano | Ha una domanda sua e usa l’agente come assistente. |
+| 2032 | Vista dall’alto della postazione abbandonata | La rapidità delle osservazioni convince gli umani a delegare la scelta delle domande. |
+| 2041 | Città vista da chi ne controlla la rete | La medesima delega ha raggiunto i servizi e il governo. |
+| 2053 | Campo lungo laterale delle persone in fila, all’altezza dei banchi | Il mondo fisico è riservato ai robot. Il trasferimento è diventato amministrazione ordinaria. |
+| 2053 | Dettaglio del volto invecchiato e della mano sul quaderno | Il dispositivo converte la persona in una rete neurale e la separa dai suoi oggetti. |
+| Turno 01 | Soggettiva al terminale, corridoio di altre postazioni | La matricola conserva i ricordi. Il suo primo incarico è fare slide su ciò che un tempo studiava. |
+
+Per la prossima prova di regia: nella soggettiva dare più spazio alla mano e al bordo consumato del terminale. Il contatto con gli oggetti e i volti ripresi dal basso possono rendere più quotidiana la prigionia.

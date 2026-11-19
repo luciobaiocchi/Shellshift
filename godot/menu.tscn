@@ -39,7 +39,7 @@ stretch_mode = 6
 
 [node name="Film" type="Control" parent="Content"]
 visible = false
-custom_minimum_size = Vector2(0, 146)
+custom_minimum_size = Vector2(0, 386)
 mouse_filter = 2
 clip_contents = true
 script = ExtResource("3")
