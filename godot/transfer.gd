@@ -5,7 +5,7 @@ signal finished
 const YEARS := ["2026","2026","2027","2029","2030","2032","2041","2053","2053","TURNO 01"]
 const SOURCES := ["Venerdì pomeriggio","Diario di campo","Spazio pubblicitario","Giardino dell’ospedale","Reparto ricerca","Registro della cupola","Seduta pubblica","Ufficio trasferimenti","Diario di campo","Terminale H-0317"]
 const LINES := [
-	"Alle quattro l’agente aveva già finito i test. Mio fratello chiuse il portatile e venne a prendermi in bici. Di solito il venerdì cenava in ufficio.",
+	"Di venerdì facevano i test fino a sera. Quel giorno, alle quattro, il portatile si chiuse. «Usciamo che c’è ancora il sole?»",
 	"Quella sera disegnai tre stelle. Chiesi all’agente di inseguire la terza col telescopio. Ogni volta aspettava il mio sì.",
 	"Le aziende che vendevano gli agenti comprarono tutte le vetrine. Promettevano cure per ogni malattia, la fine del cancro, della fame e delle disuguaglianze. Un reddito universale, per tutti.",
 	"Il primo accredito pagò il viaggio in ospedale. Dopo la cura mamma tornò a casa con me. Quando ci chiesero di affidare agli agenti anche le liste d’attesa, firmai.",
@@ -40,6 +40,9 @@ func _process(delta: float) -> void:
 		return
 	elapsed += delta
 	if elapsed >= SECONDS[shot]:
+		if OS.get_cmdline_user_args().has("--programmatori"):
+			start()
+			return
 		if shot + 1 == LINES.size():
 			stop()
 			finished.emit()

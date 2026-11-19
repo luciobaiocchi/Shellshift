@@ -8,6 +8,7 @@ const SKIN := Color("#cd9474")
 const PAPER := Color("#ddd4af")
 const BLUE := Color("#425971")
 
+var opening: Node3D
 var camera := Camera3D.new()
 var set_root := Node3D.new()
 var actors: Array[Dictionary] = []
@@ -123,6 +124,9 @@ func book(pos: Vector3) -> Node3D:
 func frame(index: int, t: float) -> void:
 	if index != scene_index:
 		build_set(index)
+	if index == 0:
+		opening.frame(t)
+		return
 	for i in actors.size():
 		var a := actors[i]
 		var phase := t*4.2+i*.83
@@ -174,7 +178,11 @@ func build_set(index: int) -> void:
 	eye = Vector3(4,2.6,5)
 	target = Vector3(0,1,0)
 	match index:
-		0,4,9:
+		0:
+			opening = preload("res://programmers.gd").new()
+			set_root.add_child(opening)
+			opening.build(self)
+		4,9:
 			block(set_root,Vector3(0,2.6,-17),Vector3(22,5.2,.3),TEAL)
 			for bay in range(-3,4):
 				block(set_root,Vector3(bay*2.9,2.6,-16.8),Vector3(2.5,2.7,.09),PAPER if warm else BLUE)

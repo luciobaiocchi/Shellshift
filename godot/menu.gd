@@ -11,6 +11,8 @@ func _ready() -> void:
 	secondary.pressed.connect(secondary_action)
 	film.finished.connect(show_receipt)
 	action.grab_focus()
+	if OS.get_cmdline_user_args().has("--programmatori"):
+		advance.call_deferred()
 
 func advance() -> void:
 	if receipt:
