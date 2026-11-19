@@ -36,7 +36,7 @@ func build(host) -> void:
 	stage.block(self,Vector3(0,2,-2.9),Vector3(11,4.4,.2),MOSS)
 	for i in range(-2,3):
 		var wx := i*1.6
-		stage.block(self,Vector3(wx,2.2,-2.75),Vector3(1.46,1.87,.08),Color("#b4cbd0"))
+		stage.block(self,Vector3(wx,2.2,-2.75),Vector3(1.46,1.87,.08),Color("#839992"))
 		for y in [1.30,2.33,3.10]:
 			stage.block(self,Vector3(wx,y,-2.66),Vector3(1.52,.048,.08),UMBER)
 		stage.block(self,Vector3(wx,2.2,-2.66),Vector3(.04,1.86,.08),UMBER)
@@ -65,62 +65,39 @@ func lettering(parent: Node3D,pos: Vector3,value: String,unit: float) -> Label3D
 
 func make_actor(x: float, curls: bool) -> void:
 	var coat := Color("#b77346") if curls else MOSS
-	var skin := Color("#b77859") if curls else Color("#d2a585")
 	var hair := Color("#3d2c2b") if curls else Color("#64463a")
 	stage.person(Vector3(x,0,-.12),coat,hair,"office")
-	var a: Dictionary = stage.actors.back()
-	var head: Node3D = a.head
-	# Rebuild the portrait while keeping the cast's proportions and rig.
-	for child in head.get_children():
+	var rig: Dictionary = stage.actors.back()
+	for child in rig.head.get_children():
 		child.free()
-	stage.round_part(head,Vector3(0,.02,0),Vector3(.44,.50,.39),skin)
-	stage.round_part(head,Vector3(0,-.085,.045),Vector3(.354,.32,.32),skin)
-	stage.round_part(head,Vector3(0,-.025,.193),Vector3(.079,.12,.09),skin.lightened(.07))
+	var portrait = preload("res://cast/ada.glb") if curls else preload("res://cast/nico.glb")
+	var face = portrait.instantiate()
+	rig.head.add_child(face)
+	# Lower the shirt neckline to expose the jaw when the actor looks down.
+	rig.spine.get_child(0).scale.y = .74
+	rig.spine.get_child(0).position.y = .29
+	for child in rig.spine.get_children():
+		if child is MeshInstance3D and child.mesh is BoxMesh:
+			child.position.y -= .11
+	var mouth := []
+	for part in face.find_children("*","MeshInstance3D",true,false):
+		if part.find_blend_shape_by_name("Smile") >= 0:
+			mouth.append(part)
 	for side in [-1,1]:
-		stage.round_part(head,Vector3(side*.21,-.005,0),Vector3(.079,.13,.073),skin)
-	stage.round_part(head,Vector3(0,.13,-.045),Vector3(.47,.32,.4),hair)
-	var count := 17 if curls else 9
-	for i in count:
-		var angle := TAU*i/count
-		var tuft = stage.round_part(head,Vector3(.193*cos(angle),.13+.045*sin(i*2.7),.155*sin(angle)-.018),Vector3(.138,.15,.12),hair.lightened(.028*(i%3)))
-		tuft.rotation.z = .4*sin(i)
-	if curls:
-		stage.round_part(head,Vector3(-.06,.13,-.20),Vector3(.28,.25,.24),hair)
-	else:
-		for side in [-1,1]:
-			stage.block(head,Vector3(side*.176,.016,.075),Vector3(.049,.12,.063),hair)
-	var eyes := []
-	var brows := []
-	var lips := []
-	var smile = stage.round_part(head,Vector3(0,-.101,.212),Vector3(.12,.04,.018),UMBER)
-	var teeth = stage.block(head,Vector3(0,-.095,.224),Vector3(.084,.012,.01),stage.PAPER)
-	for side in [-1,1]:
-		var eye = stage.joint(head,Vector3(side*.09,.04,.174))
-		eye.rotation.y = side*.24
-		stage.round_part(eye,Vector3.ZERO,Vector3(.092,.044,.031),stage.PAPER)
-		stage.round_part(eye,Vector3(0,0,.014),Vector3(.033,.039,.016),UMBER)
-		stage.block(eye,Vector3(-.006,.008,.023),Vector3(.009,.009,.006),Color.WHITE)
-		eyes.append(eye)
-		var brow = stage.block(head,Vector3(side*.09,.089,.174),Vector3(.083,.018,.026),hair)
-		brows.append(brow)
-		var lip = stage.joint(head,Vector3(0,-.10,.217))
-		stage.block(lip,Vector3(side*.036,0,0),Vector3(.074,.014,.013),UMBER)
-		lips.append(lip)
-		var collar = stage.block(a.spine,Vector3(side*.095,.60,.163),Vector3(.14,.16,.052),coat.lightened(.23))
-		collar.rotation.z = side*.46
-	for j in 4:
-		stage.round_part(a.spine,Vector3(0,.49-j*.105,.217),Vector3(.025,.025,.015),BRASS)
-	stage.block(a.spine,Vector3(.174,.40,.175),Vector3(.123,.117,.031),coat.darkened(.15))
-	stage.block(a.spine,Vector3(.174,.457,.20),Vector3(.124,.012,.012),BRASS)
+		var collar = stage.block(rig.spine,Vector3(side*.084,.53,.13),Vector3(.115,.13,.033),coat.lightened(.13))
+		collar.rotation.z = side*.48
+	for j in 3:
+		stage.round_part(rig.spine,Vector3(0,.45-j*.105,.21),Vector3(.021,.021,.015),BRASS)
 	if not curls:
 		for side in [-1,1]:
 			var rims := TorusMesh.new()
-			rims.inner_radius = .060
-			rims.outer_radius = .068
-			var rim = stage.model(head,Vector3(side*.089,.043,.203),rims,UMBER)
+			rims.inner_radius = .058
+			rims.outer_radius = .063
+			var rim = stage.model(rig.head,Vector3(side*.084,.042,.18),rims,UMBER)
 			rim.rotation.x = PI/2
-		stage.block(head,Vector3(0,.048,.201),Vector3(.06,.013,.018),UMBER)
-	cast.append({"rig":a,"eyes":eyes,"brows":brows,"lips":lips,"smile":smile,"teeth":teeth})
+			rim.rotation.y = side*.27
+		stage.block(rig.head,Vector3(0,.052,.196),Vector3(.055,.008,.012),UMBER)
+	cast.append({"rig":rig,"mouth":mouth})
 
 func frame(t: float) -> void:
 	var relief := smoothstep(2.6,3.7,t)
@@ -131,20 +108,16 @@ func frame(t: float) -> void:
 		var actor: Dictionary = cast[i]
 		var rig: Dictionary = actor.rig
 		var side := 1 if i == 0 else -1
-		var look := smoothstep(2.65+i*.36,4+i*.3,t)
+		var look := smoothstep(2.65+i*.85,4+i*.85,t)
 		rig.body.rotation.y = side*.21*look
 		rig.head.rotation.y = side*(.14+.58*look)
 		rig.head.rotation.x = .25*(1-relief)-.12*relief+.046*sin(t*9+i)*bump
-		actor.smile.scale.y = .012 + .032*relief
-		actor.teeth.visible = relief > .48
+		var grin := smoothstep(3.55+i*.78,4.65+i*.78,t)
+		for part in actor.mouth:
+			part.set_blend_shape_value(part.find_blend_shape_by_name("Smile"),grin)
 		rig.spine.rotation.x = .12*(1-relief)-.07*relief
 		rig.spine.position.y = .91 - .045*relief + .025*bump*sin(t*10)
 		for j in 2:
-			var sign_x := -1 if j == 0 else 1
-			actor.eyes[j].scale.y = (1-.37*relief) * (1-.90*exp(-pow((t-4.9-i*.25)/.11,2)))
-			actor.brows[j].position.y = .088 + .026*look
-			actor.brows[j].rotation.z = -sign_x*.10*relief
-			actor.lips[j].rotation.z = sign_x*.43*relief
 			rig.arms[j].rotation.x = -.66*(1-relief) + .09*sin(t*13+j)*(1-relief)
 			rig.arms[j].rotation.z = 0
 		var inner: Node3D = rig.arms[1-i]
@@ -156,6 +129,12 @@ func frame(t: float) -> void:
 	if t < 3.15:
 		cam.position = Vector3(-.04,1.76,-.44)
 		cam.look_at(Vector3(-.44,1.32,.75))
+	elif t < 5.35:
+		cam.position = Vector3(-.15,1.86,1.12)
+		cam.look_at(Vector3(-.62,1.77,-.12))
+	elif t < 6.15:
+		cam.position = Vector3(.25,1.83,1.12)
+		cam.look_at(Vector3(.63,1.75,-.12))
 	elif t < 7.7:
 		cam.position = Vector3(.09+.08*sin(t*.5),1.78,2.53-.06*(t-2.65))
 		cam.look_at(Vector3(0,1.59,-.12))

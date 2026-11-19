@@ -11,7 +11,8 @@ func _ready() -> void:
 	secondary.pressed.connect(secondary_action)
 	film.finished.connect(show_receipt)
 	action.grab_focus()
-	if OS.get_cmdline_user_args().has("--programmatori"):
+	var args := OS.get_cmdline_user_args()
+	if args.has("--programmatori") or args.has("--prologo"):
 		advance.call_deferred()
 
 func advance() -> void:

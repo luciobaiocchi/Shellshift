@@ -9,6 +9,7 @@ const PAPER := Color("#ddd4af")
 const BLUE := Color("#425971")
 
 var opening: Node3D
+var key := DirectionalLight3D.new()
 var camera := Camera3D.new()
 var set_root := Node3D.new()
 var actors: Array[Dictionary] = []
@@ -30,7 +31,6 @@ func _ready() -> void:
 	environment.ambient_light_color = Color("#c3cfd6")
 	environment.ambient_light_energy = 0.7
 	camera.environment = environment
-	var key := DirectionalLight3D.new()
 	add_child(key)
 	key.rotation_degrees = Vector3(-52, -30, 0)
 	key.light_energy = 1.08
@@ -173,6 +173,13 @@ func build_set(index: int) -> void:
 	moving_props.clear()
 	scene_index = index
 	var warm := index < 5
+	var decline := clampf((index-4)/4.0,0,1)
+	key.light_energy = lerpf(.84,.42,decline)
+	key.light_color = Color("#fff0db").lerp(Color("#bac5e3"),decline)
+	camera.environment.fog_enabled = index >= 5
+	camera.environment.fog_density = lerpf(.004,.049,decline)
+	camera.environment.fog_light_color = Color("#716981")
+	camera.environment.ambient_light_energy = lerpf(.7,.40,decline)
 	camera.environment.background_color = Color("#eacda3") if warm else BLUE.darkened(.5)
 	block(set_root,Vector3(0,-.16,0),Vector3(45,.3,40),Color("#ac9170") if warm else BLUE)
 	eye = Vector3(4,2.6,5)
@@ -196,7 +203,18 @@ func build_set(index: int) -> void:
 			if index == 4:
 				eye = Vector3(6,5,7)
 			if index == 9:
-				eye = Vector3(.12,1.74,2.9)
+				var terminal := joint(set_root,Vector3(0,1.38,.19))
+				block(terminal,Vector3.ZERO,Vector3(1.12,.79,.20),INK)
+				block(terminal,Vector3(0,0,.112),Vector3(.94,.61,.04),Color("#372a26"))
+				var assignment := Label3D.new()
+				terminal.add_child(assignment)
+				assignment.position = Vector3(0,0,.14)
+				assignment.pixel_size = .00135
+				assignment.font_size = 46
+				assignment.outline_size = 0
+				assignment.modulate = Color("#ffc675")
+				assignment.text = "H-0317  /  TURNO 01\n\n3 DIAPOSITIVE\nTEMPO   07:00"
+				eye = Vector3(.09,1.65,2.46)
 				target = Vector3(0,1.37,0)
 		1,5:
 			for i in range(14):
@@ -258,11 +276,19 @@ func build_set(index: int) -> void:
 			for x in [1.8,3.35]:
 				block(set_root,Vector3(x,1.3,0),Vector3(.2,2.6,.26),TEAL)
 			block(set_root,Vector3(2.57,2.6,0),Vector3(1.8,.14,.27),SUN)
+			# The public gallery hangs above the people waiting for transfer.
+			block(set_root,Vector3(0,2.75,-1.94),Vector3(22,.22,1.38),INK)
+			for rail_y in [3.18,3.52]:
+				block(set_root,Vector3(0,rail_y,-1.29),Vector3(22,.045,.045),BLUE)
+			for post in range(-8,9):
+				block(set_root,Vector3(post*1.28,3.16,-1.29),Vector3(.042,.81,.042),INK)
+			for walker in range(3):
+				person(Vector3(-5+walker*2.7,2.86,-1.94),BLUE.darkened(.36),INK,"walk",PI/2)
 			if index == 7:
 				for i in range(9):
 					person(Vector3(1.7-i*1.32,0,.2*sin(i)),[BLUE,WOOD,TEAL][i%3],PAPER if i%3 == 0 else INK,"walk",PI/2)
-				eye = Vector3(5.1,2.1,7.3)
-				target = Vector3(.9,1.15,0)
+				eye = Vector3(4.6,1.02,7.4)
+				target = Vector3(.6,1.96,-1)
 			else:
 				person(Vector3(0,0,0),WOOD,PAPER,"point",.6)
 				moving_props.append(book(Vector3(.58,1.23,.24)))
