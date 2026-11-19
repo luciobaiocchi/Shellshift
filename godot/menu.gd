@@ -2,8 +2,9 @@ extends Control
 
 @onready var action: Button = $Content/Action
 @onready var secondary: Button = $Content/Exit
-@onready var film = $Content/Film
+@onready var film = $Film
 var receipt := false
+var previous_mode := Window.MODE_WINDOWED
 
 func _ready() -> void:
 	action.pressed.connect(advance)
@@ -20,9 +21,10 @@ func advance() -> void:
 		return
 	for control in [$Content/Skyline, $Content/Title, $Content/Message, $Content/Station, action]:
 		control.hide()
+	previous_mode = get_window().mode
+	get_window().mode = Window.MODE_FULLSCREEN
+	$Content.hide()
 	film.start()
-	secondary.text = "Salta il filmato"
-	secondary.grab_focus()
 
 func secondary_action() -> void:
 	if film.visible:
@@ -32,6 +34,8 @@ func secondary_action() -> void:
 		get_tree().quit()
 
 func show_receipt() -> void:
+	get_window().mode = previous_mode
+	$Content.show()
 	receipt = true
 	for control in [$Content/Skyline, $Content/Title, $Content/Message, $Content/Station, action]:
 		control.show()
@@ -40,3 +44,9 @@ func show_receipt() -> void:
 	action.text = "Torna al menu"
 	secondary.text = "Esci"
 	action.grab_focus()
+
+
+func _input(event: InputEvent) -> void:
+	if film.visible and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		secondary_action()

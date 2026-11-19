@@ -9,9 +9,9 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 window/size/viewport_width=720
 window/size/viewport_height=480
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
+window/stretch/aspect="expand"
 
-accessibility/tts/text_to_speech=true
+
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
