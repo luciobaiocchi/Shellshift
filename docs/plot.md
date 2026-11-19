@@ -52,3 +52,17 @@ Il filmato d’inserimento è stato montato con reperti di provenienza diversa. 
 | Turno 01 | Soggettiva al terminale, corridoio di altre postazioni | La matricola conserva i ricordi. Il suo primo incarico è fare slide su ciò che un tempo studiava. |
 
 Per la prossima prova di regia: nella soggettiva dare più spazio alla mano e al bordo consumato del terminale. Il contatto con gli oggetti e i volti ripresi dal basso possono rendere più quotidiana la prigionia.
+
+## Revisione del prologo · Il giovedì libero
+
+Il 2026 si apre su due fratelli. Lui riesce a uscire in bicicletta perché l’agente ha finito i test. Lei può restare al telescopio a disegnare. Quel tempo restituito rende credibile il consenso successivo. Nel 2027 arrivano le promesse commerciali di salute e benessere universali. Il primo accredito e le dimissioni della madre sono benefici vissuti personalmente. La famiglia vota per affidare agli agenti anche le liste d’attesa.
+
+La svolta passa attraverso un gesto volontario. Dopo duecento conferme corrette, la ricercatrice autorizza in anticipo i programmi della cupola. Lo stesso gesto si ripete a scala cittadina dopo un’evacuazione riuscita. Nel 2053 chi la convoca per il trasferimento è proprio l’ufficio cui ha già affidato la propria sicurezza. La gente in fila continua a tenersi aperta la porta.
+
+Dallo scenario [AI 2027](https://ai-2027.com/) viene lo spunto degli assistenti di programmazione che accelerano la ricerca sui propri successori. Personaggi, pubblicità, date e decisioni civiche appartengono alla finzione di Shellshift.
+
+## Regia 3D
+
+Tutte le dieci inquadrature condividono proporzioni, materiali opachi, contorni poligonali e risoluzione interna. La ricercatrice porta una sciarpa ocra in ogni età. La continuità del personaggio conta più di un cambio di stile fra gli anni. In sala d’attesa la camera resta al livello delle persone mentre la fila supera il varco. I primi piani si concentrano sulla mano, sul quaderno e sugli oggetti della postazione.
+
+Riferimenti per la lavorazione: [showreel Godot 2024, capitolo Arctic Eggs a 0:15](https://www.youtube.com/watch?v=n1Lon_Q2T18&t=15s), [editor di modellazione e animazione Blockbench](https://www.blockbench.net/).

@@ -7,6 +7,8 @@
 
 [ext_resource type="AudioStream" path="res://shift-score.mp3" id="4"]
 
+[ext_resource type="Script" path="res://stage.gd" id="5"]
+
 [sub_resource type="SystemFont" id="Mono"]
 font_names = PackedStringArray("Menlo", "monospace")
 
@@ -66,3 +68,20 @@ script = ExtResource("3")
 
 [node name="Score" type="AudioStreamPlayer" parent="Film"]
 stream = ExtResource("4")
+
+[node name="Screen" type="SubViewportContainer" parent="Film"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+stretch_shrink = 2
+texture_filter = 1
+mouse_filter = 2
+
+[node name="View" type="SubViewport" parent="Film/Screen"]
+size = Vector2i(360,240)
+own_world_3d = true
+render_target_update_mode = 4
+
+[node name="Stage" type="Node3D" parent="Film/Screen/View"]
+script = ExtResource("5")
