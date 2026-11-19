@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://menu.gd" id="1"]
 [ext_resource type="Texture2D" path="res://skyline.png" id="2"]
 
+[ext_resource type="Script" path="res://transfer.gd" id="3"]
+
 [sub_resource type="SystemFont" id="Mono"]
 font_names = PackedStringArray("Menlo", "monospace")
 
@@ -34,6 +36,13 @@ texture_filter = 1
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="Film" type="Control" parent="Content"]
+visible = false
+custom_minimum_size = Vector2(0, 146)
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("3")
 
 [node name="Title" type="Label" parent="Content"]
 theme_override_font_sizes/font_size = 44
