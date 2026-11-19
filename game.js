@@ -39,19 +39,19 @@ function frame(now){
   const key=[phase,mark,sim.completed,sim.pairs,foundPass].join('/');
   if(key!==snapshot){
     snapshot=key;syncSector();
-    let status='In attesa di una richiesta.';
-    if(phase==='moving')status=mark<50?'Richiesta in transito nel tubo.':'Sigillo applicato · trasferimento in corso.';
-    if(phase==='denied'){status='Clac. Mirror pubblico bloccato. Il Supervisor consente l’archivio interno.';tone(110);}
-    if(phase==='received')status='Pagina 12 ricevuta. Il catalogo è pronto per la consegna.';
-    if(sim.completed)status=sim.pairs===1?'Consegnato. Dal Gateway arriva un rumore…':'Task completata. Il Gateway ha creato il nodo 02.';
+    let status='Awaiting request.';
+    if(phase==='moving')status=mark<50?'Request in transit through the tube.':'Seal applied · transfer in progress.';
+    if(phase==='denied'){status='Clack. Public mirror blocked. The Supervisor allows internal archive requests.';tone(110);}
+    if(phase==='received')status='Page 12 received. The catalogue is ready to deliver.';
+    if(sim.completed)status=sim.pairs===1?'Delivered. Something stirs inside the Gateway…':'Assignment complete. The Gateway has created node 02.';
     el('status').textContent=status;
     el('signal').value=mark;
     el('archive').dataset.phase=phase||'idle';
-    el('line').textContent=p?'PKT '+String(p.id).padStart(3,'0')+' / '+mark+'% · '+phase.toUpperCase():'NODO 01 ── IDLE';
+    el('line').textContent=p?'PKT '+String(p.id).padStart(3,'0')+' / '+mark+'% · '+phase.toUpperCase():'NODE 01 ── IDLE';
     el('send').disabled=phase==='moving'||phase==='received';
     el('deliver').disabled=phase!=='received'||sim.completed;
-    el('pages').textContent=phase==='received'?'11 ▪ 12 ▪ 13 / Catalogo completo':'11 ▪ ▪ 13 / Pagina 12 assente';
-    el('task').textContent=(sim.completed?'✓ Task consegnata':'Task aperta · Pagina 12')+(foundPass?' · Pass del corriere ◆':'');
+    el('pages').textContent=phase==='received'?'11 ▪ 12 ▪ 13 / Catalogue complete':'11 ▪ ▪ 13 / Page 12 missing';
+    el('task').textContent=(sim.completed?'✓ Assignment delivered':'Open assignment · Page 12')+(foundPass?' · Courier pass ◆':'');
   }
   requestAnimationFrame(frame);
 }

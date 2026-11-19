@@ -1,0 +1,43 @@
+[gd_resource type="Theme" format=3]
+
+[sub_resource type="SystemFont" id="Mono"]
+font_names = PackedStringArray("Menlo", "DejaVu Sans Mono", "monospace")
+
+[sub_resource type="StyleBoxFlat" id="Key"]
+bg_color = Color(0.18, 0.23, 0.24, 1)
+border_width_top = 1
+border_width_left = 1
+border_width_bottom = 2
+border_width_right = 1
+border_color = Color(0.35, 0.40, 0.40, 1)
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="Selected"]
+bg_color = Color(0.25, 0.30, 0.29, 1)
+border_width_left = 2
+border_width_bottom = 1
+border_color = Color(0.80, 0.64, 0.42, 1)
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.94, 0.80, 0.58, 1)
+
+[resource]
+default_font = SubResource("Mono")
+default_font_size = 14
+Button/colors/font_color = Color(0.88, 0.85, 0.77, 1)
+Button/styles/normal = SubResource("Key")
+Button/styles/hover = SubResource("Selected")
+Button/styles/pressed = SubResource("Selected")
+Button/styles/focus = SubResource("Focus")

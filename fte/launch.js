@@ -10,7 +10,7 @@ function report(line){
   }
   if(line.includes('SHELLSHIFT_PASS'))notify('sector-pass');
   if(/unable to initialize renderer|failed to initialise renderer|couldn.t initialize.*renderer|no available video device/i.test(line)){
-    notice.hidden=false;notice.textContent='FTEQW richiede WebGL. Attiva l’accelerazione grafica oppure usa un browser con WebGL disponibile.';
+    notice.hidden=false;notice.textContent='FTEQW needs WebGL. Enable graphics acceleration or use a browser that supports WebGL.';
   }
 }
 window.addEventListener('message',e=>{
@@ -30,16 +30,16 @@ async function bytes(name){
   return r.arrayBuffer();
 }
 async function start(){
-  if(location.protocol==='file:'){notice.textContent='Avvia Shellshift via HTTP. Nella cartella estratta esegui python3 serve.py, poi apri l’indirizzo indicato.';return;}
+  if(location.protocol==='file:'){notice.textContent='Launch Shellshift over HTTP. Run python3 serve.py in the extracted folder and open the address it prints.';return;}
   const diagnostic=location.search==='?diagnostic';
   const hasGL=document.createElement('canvas').getContext('webgl');
-  if(!hasGL&&!diagnostic){notice.textContent='Il browser non offre WebGL. Per entrare nel Settore Nero serve un browser con accelerazione grafica.';return;}
+  if(!hasGL&&!diagnostic){notice.textContent='WebGL is unavailable. Enter the Black Sector in a browser with graphics acceleration enabled.';return;}
   if(hasGL)hasGL.getExtension('WEBGL_lose_context')?.loseContext();
   const [wasm,manifest,pk3]=await Promise.all(['engine/ftewebgl.wasm','default.fmf','game/sector.pk3'].map(bytes));
   window.Module={canvas,wasmBinary:new Uint8Array(wasm),
     files:{'default.fmf':manifest,'sector/pak0.pk3':pk3},
     arguments:[...(diagnostic?['-dedicated']:[]),'-nohome','+set','sv_public','0','+set','developer','1','+exec','sector.cfg','+map','void'],
-    print:report,printErr:report,onAbort:()=>{notice.hidden=false;notice.textContent='Il motore si è fermato. Rientra al desktop e riapri il settore.';}};
+    print:report,printErr:report,onAbort:()=>{notice.hidden=false;notice.textContent='The engine stopped. Return to the desktop and reopen the sector.';}};
   const script=document.createElement('script');script.src='engine/ftewebgl.js';document.body.appendChild(script);
 }
-start().catch(e=>{notice.textContent='Avvio non riuscito · '+e.message;});
+start().catch(e=>{notice.textContent='Launch failed · '+e.message;});

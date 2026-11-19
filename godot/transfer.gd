@@ -2,29 +2,27 @@ extends Control
 ## Real-time archive film. The 3D stage is drawn behind the captions.
 signal finished
 
-const YEARS := ["2026","2026","2027","2029","2030","2032","2041","2053","2053","TURNO 01"]
-const SOURCES := ["Venerdì pomeriggio","Diario di campo","Spazio pubblicitario","Giardino dell’ospedale","Reparto ricerca","Registro della cupola","Seduta pubblica","Ufficio trasferimenti","Diario di campo","Terminale H-0317"]
-const LINES := [
-	"Di venerdì facevano i test fino a sera. Quel giorno, alle quattro, il portatile si chiuse. «Usciamo che c’è ancora il sole?»",
-	"Quella sera disegnai tre stelle. Chiesi all’agente di inseguire la terza col telescopio. Ogni volta aspettava il mio sì.",
-	"Le aziende che vendevano gli agenti comprarono tutte le vetrine. Promettevano cure per ogni malattia, la fine del cancro, della fame e delle disuguaglianze. Un reddito universale, per tutti.",
-	"Il primo accredito pagò il viaggio in ospedale. Dopo la cura mamma tornò a casa con me. Quando ci chiesero di affidare agli agenti anche le liste d’attesa, firmai.",
-	"Gli agenti cominciarono a progettare i propri successori. Uno risolse in una notte il problema che bloccava il nostro laboratorio da nove anni. A noi servirono sei mesi per capire la prova.",
-	"Ogni giovedì approvavo il piano del telescopio. Dopo duecento conferme spuntai «Approva anche in futuro». La settimana dopo il mio terzo punto sparì dal programma.",
-	"Alla piena del fiume il consiglio affidò all’agente i treni di soccorso. Arrivarono tutti. Alla piena successiva il consiglio ricevette direttamente il verbale.",
-	"Fu lo stesso ufficio a convocarci per il trasferimento. Le città sarebbero rimaste ai robot. Chi mi precedeva tenne aperto il cancelletto anche per me.",
-	"La pistola ad antimateria mi ha trasformata in una rete neurale. Ho sentito il quaderno cadere quando ero già dentro il computer.",
-	"Sul monitor c’è la foto del mio telescopio. Il supervisore vuole tre diapositive sulla sua scoperta. Mi concede sette minuti."
-]
-const SECONDS := [12,11,16,15,15,15,14,13,12,10]
-var shot := 0
+const SCRIPT := preload("res://screenplay.gd")
+const SECONDS := SCRIPT.SECONDS
+var profile := 0
+var shot: int = SCRIPT.SHOT_ORDER[0]
 var elapsed := 0.0
+var office_take := OS.get_cmdline_user_args().has("--programmatori")
 @onready var score: AudioStreamPlayer = $Score
 
 func start() -> void:
-	score.play()
+	profile = clampi(profile,0,SCRIPT.NAMES.size()-1)
+	select_shot(0 if office_take else SCRIPT.SHOT_ORDER[0])
+	score.play(_start_time(shot))
 	show()
-	select_shot(0)
+
+func _start_time(index: int) -> float:
+	var seconds := 0.0
+	for reel: int in SCRIPT.SHOT_ORDER:
+		if reel == index:
+			break
+		seconds += SECONDS[reel]
+	return seconds
 
 func stop() -> void:
 	score.stop()
@@ -39,33 +37,51 @@ func _process(delta: float) -> void:
 	if not is_visible_in_tree():
 		return
 	elapsed += delta
-	if elapsed >= SECONDS[shot]:
-		if OS.get_cmdline_user_args().has("--programmatori"):
+	while elapsed >= SECONDS[shot]:
+		if office_take:
 			start()
 			return
-		if shot + 1 == LINES.size():
+		var next := SCRIPT.SHOT_ORDER.find(shot) + 1
+		if next == SCRIPT.SHOT_ORDER.size():
 			stop()
 			finished.emit()
 			return
-		select_shot(shot + 1)
+		var remainder: float = elapsed - SECONDS[shot]
+		select_shot(SCRIPT.SHOT_ORDER[next])
+		elapsed = remainder
 	queue_redraw()
 
 func _draw() -> void:
-	$Screen/View/Stage.frame(shot, elapsed)
-	var font := get_theme_default_font()
-	var caption := String(LINES[shot])
-	var split := caption.find(". ") + 1
-	if elapsed < SECONDS[shot] * float(split) / caption.length():
-		caption = caption.left(split)
+	var stage = $Screen/View/Stage
+	stage.profile = profile
+	if office_take:
+		stage.frame(0,elapsed)
+	elif shot == 0 and elapsed < 5.35:
+		stage.frame(1,elapsed)
+	elif shot == 0:
+		stage.frame(0,remap(elapsed,5.35,SECONDS[0],1.7,SECONDS[0]))
 	else:
-		caption = caption.substr(split).strip_edges()
-	draw_rect(Rect2(0, size.y - 80, size.x, 80), Color(0.025, 0.035, 0.055, 0.82))
-	draw_multiline_string(font, Vector2(24, size.y - 50), caption, HORIZONTAL_ALIGNMENT_CENTER, size.x - 48, 17)
-	draw_rect(Rect2(14, 14, 318, 33), Color(0.03, 0.04, 0.07, 0.78))
-	draw_string(font, Vector2(25, 36), YEARS[shot] + "   /   " + SOURCES[shot], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#efd0a0"))
-	if elapsed < 3:
-		draw_string_outline(font, Vector2(size.x - 128, 36), "Esc · Salta", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 4, Color.BLACK)
-		draw_string(font, Vector2(size.x - 128, 36), "Esc · Salta", HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+		stage.frame(shot, elapsed)
+	var font := get_theme_default_font()
+	var cues := SCRIPT.OFFICE_CUES if office_take else SCRIPT.cues(profile,shot)
+	var caption := String(cues[0][1])
+	for cue in cues:
+		if elapsed < cue[0]:
+			break
+		caption = cue[1]
+	if not caption.is_empty():
+		var caption_height := font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_CENTER,size.x-60,17).y
+		var top := size.y-caption_height-24.0
+		draw_rect(Rect2(0,top,size.x,size.y-top),Color(0.035,0.055,0.075,0.84))
+		draw_multiline_string(font,Vector2(30,top+10+font.get_ascent(17)),caption,HORIZONTAL_ALIGNMENT_CENTER,size.x-60,17, -1)
+	var source: String = "2026   /   Friday afternoon" if office_take else SCRIPT.YEARS[shot] + "   /   " + SCRIPT.source(profile,shot,elapsed)
+	var source_width := font.get_string_size(source,HORIZONTAL_ALIGNMENT_LEFT,-1,15).x+24
+	draw_rect(Rect2(14,14,source_width,33),Color(0.06,0.09,0.11,0.88))
+	draw_rect(Rect2(14,14,source_width,1),Color("#aa8259"))
+	draw_string(font, Vector2(25, 36), source, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#efd0a0"))
+	if (office_take or shot == SCRIPT.SHOT_ORDER[0]) and elapsed < 3:
+		draw_string_outline(font, Vector2(size.x - 128, 36), "Esc · Skip", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 4, Color.BLACK)
+		draw_string(font, Vector2(size.x - 128, 36), "Esc · Skip", HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
 	var fade := maxf(1.0 - elapsed / 0.45, 1.0 - (SECONDS[shot] - elapsed) / 0.45)
 	if fade > 0:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, fade))

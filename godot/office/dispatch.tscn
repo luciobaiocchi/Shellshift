@@ -1,0 +1,599 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://office/dispatch.gd" id="Script"]
+[ext_resource type="PackedScene" path="res://cast/nico.glb" id="Face"]
+
+[sub_resource type="StandardMaterial3D" id="Midnight"]
+resource_name = "Midnight"
+albedo_color = Color(0.15294117647058825, 0.21176470588235294, 0.25098039215686274, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Wall"]
+resource_name = "Wall"
+albedo_color = Color(0.34901960784313724, 0.39215686274509803, 0.41568627450980394, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Frame"]
+resource_name = "Frame"
+albedo_color = Color(0.21568627450980393, 0.25098039215686274, 0.26666666666666666, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Paint"]
+resource_name = "Paint"
+albedo_color = Color(0.403921568627451, 0.4666666666666667, 0.43529411764705883, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Uniform"]
+resource_name = "Uniform"
+albedo_color = Color(0.3058823529411765, 0.39215686274509803, 0.4470588235294118, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Rubber"]
+resource_name = "Rubber"
+albedo_color = Color(0.2, 0.19215686274509805, 0.22745098039215686, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Edge"]
+resource_name = "Edge"
+albedo_color = Color(0.5215686274509804, 0.5372549019607843, 0.5019607843137255, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Strip"]
+resource_name = "Strip"
+albedo_color = Color(0.7490196078431373, 0.6627450980392157, 0.5137254901960784, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Amber"]
+resource_name = "Amber"
+albedo_color = Color(0.9372549019607843, 0.7372549019607844, 0.396078431372549, 1)
+roughness = 0.89
+shading_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="Paper"]
+resource_name = "Paper"
+albedo_color = Color(0.7843137254901961, 0.7333333333333333, 0.611764705882353, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Skin"]
+resource_name = "Skin"
+albedo_color = Color(0.7647058823529411, 0.5372549019607843, 0.4392156862745098, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Map"]
+resource_name = "Map"
+albedo_color = Color(0.1607843137254902, 0.24705882352941178, 0.25882352941176473, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Backup"]
+resource_name = "Backup"
+albedo_color = Color(0.34901960784313724, 0.45098039215686275, 0.4588235294117647, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Ceramic"]
+resource_name = "Ceramic"
+albedo_color = Color(0.6470588235294118, 0.6431372549019608, 0.5725490196078431, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Red"]
+resource_name = "Red"
+albedo_color = Color(0.6941176470588235, 0.396078431372549, 0.30196078431372547, 1)
+roughness = 0.89
+shading_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="Blue"]
+resource_name = "Blue"
+albedo_color = Color(0.4588235294117647, 0.6078431372549019, 0.6039215686274509, 1)
+roughness = 0.89
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="Box"]
+
+[sub_resource type="CylinderMesh" id="Pipe"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 14
+
+[sub_resource type="SphereMesh" id="Round"]
+radial_segments = 12
+rings = 5
+
+[sub_resource type="Animation" id="LeverAction"]
+resource_name = "handover"
+length = 3.8
+tracks/0/type = "value"
+tracks/0/path = NodePath("InterlockingDesk/Lever:rotation:x")
+tracks/0/keys = {"times": PackedFloat32Array(0, 0.83, 1.05, 1.54, 3.8), "transitions": PackedFloat32Array(1, 1.9, 0.6, 1, 1), "update": 0, "values": [-0.66, -0.66, -0.48, 0.72, 0.72]}
+tracks/1/type = "value"
+tracks/1/path = NodePath("SignalBox/CivilRailControl/Authority:text")
+tracks/1/keys = {"times": PackedFloat32Array(0, 1.5), "transitions": PackedFloat32Array(1, 1), "update": 1, "values": ["ROUTING   /   LOCAL", "ROUTING   /   AGENT"]}
+
+[sub_resource type="AnimationLibrary" id="Library"]
+_data = {&"handover": SubResource("LeverAction")}
+
+[node name="Dispatch" type="Node3D"]
+script = ExtResource("Script")
+
+[node name="SignalBox" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+
+[node name="Floor" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(0, -0.1, 0)
+scale = Vector3(7, 0.2, 6)
+mesh = SubResource("Box")
+material_override = SubResource("Midnight")
+
+[node name="Cladding" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(0, 2, -1.9)
+scale = Vector3(7, 4, 0.26)
+mesh = SubResource("Box")
+material_override = SubResource("Wall")
+
+[node name="PanelJoint0" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-3.2, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint1" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-2.58, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint2" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-1.96, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint3" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-1.34, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint4" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-0.72, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint5" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(-0.1, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint6" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(0.52, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint7" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(1.14, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint8" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(1.76, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint9" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(2.38, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="PanelJoint10" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(3.0, 2, -1.75)
+scale = Vector3(0.015, 4, 0.025)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="CableDuct" type="MeshInstance3D" parent="SignalBox"]
+position = Vector3(0, 0.77, -1.71)
+scale = Vector3(7, 0.19, 0.1)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="CivilRailControl" type="Node3D" parent="SignalBox"]
+position = Vector3(0.85, 1.73, -1.57)
+
+[node name="TinCase" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0, 0, 0)
+scale = Vector3(2.65, 1.5, 0.22)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="EnamelMap" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0, 0, 0.116)
+scale = Vector3(2.53, 1.37, 0.05)
+mesh = SubResource("Box")
+material_override = SubResource("Map")
+
+[node name="FloodDistrict" type="Label3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0, 0.49, 0.147)
+font_size = 44
+pixel_size = 0.00165
+outline_size = 0
+modulate = Color(0.7843137254901961, 0.7333333333333333, 0.611764705882353, 1)
+text = "FLOOD RELIEF   /   DISTRICT 04"
+
+[node name="Track0" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.805, -0.03, 0.165)
+scale = Vector3(0.455, 0.041, 0.018)
+rotation = Vector3(0, 0, 0.0)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Track1" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.45, 0.07, 0.165)
+scale = Vector3(0.333, 0.041, 0.018)
+rotation = Vector3(0, 0, 0.6557)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Track2" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.075, 0.17, 0.165)
+scale = Vector3(0.495, 0.041, 0.018)
+rotation = Vector3(0, 0, 0.0)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Track3" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0.27, 0.065, 0.165)
+scale = Vector3(0.295, 0.041, 0.018)
+rotation = Vector3(0, 0, -0.8098)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Track4" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0.695, -0.04, 0.165)
+scale = Vector3(0.655, 0.041, 0.018)
+rotation = Vector3(0, 0, 0.0)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Station0" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-1.03, -0.03, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Amber")
+
+[node name="Station1" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.58, -0.03, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Station2" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.32, 0.17, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Station3" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0.17, 0.17, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Station4" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0.37, -0.04, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Station5" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(1.02, -0.04, 0.178)
+scale = Vector3(0.083, 0.083, 0.022)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="River0" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.745, -0.365, 0.164)
+scale = Vector3(0.5267, 0.028, 0.018)
+rotation = Vector3(0, 0, 0.2124)
+mesh = SubResource("Box")
+material_override = SubResource("Blue")
+
+[node name="River1" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.395, -0.33, 0.164)
+scale = Vector3(0.1992, 0.028, 0.018)
+rotation = Vector3(0, 0, -0.2075)
+mesh = SubResource("Box")
+material_override = SubResource("Blue")
+
+[node name="River2" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-0.015, -0.29, 0.164)
+scale = Vector3(0.5875, 0.028, 0.018)
+rotation = Vector3(0, 0, 0.2075)
+mesh = SubResource("Box")
+material_override = SubResource("Blue")
+
+[node name="River3" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0.66, -0.255, 0.164)
+scale = Vector3(0.7866, 0.028, 0.018)
+rotation = Vector3(0, 0, -0.064)
+mesh = SubResource("Box")
+material_override = SubResource("Blue")
+
+[node name="Train" type="MeshInstance3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(-1.03, 0.04, 0.19)
+scale = Vector3(0.16, 0.055, 0.035)
+mesh = SubResource("Box")
+material_override = SubResource("Amber")
+
+[node name="Authority" type="Label3D" parent="SignalBox/CivilRailControl"]
+position = Vector3(0, -0.51, 0.155)
+font_size = 44
+pixel_size = 0.0016
+outline_size = 0
+modulate = Color(0.9372549019607843, 0.7372549019607844, 0.396078431372549, 1)
+text = "ROUTING   /   LOCAL"
+
+[node name="InterlockingDesk" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+
+[node name="Console" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0, 0.63, 0.54)
+scale = Vector3(2.9, 0.76, 0.61)
+mesh = SubResource("Box")
+material_override = SubResource("Paint")
+
+[node name="Worktop" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0, 1.025, 0.52)
+scale = Vector3(2.94, 0.094, 0.68)
+mesh = SubResource("Box")
+material_override = SubResource("Midnight")
+
+[node name="Bullnose" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0, 1.016, 0.85)
+scale = Vector3(2.95, 0.087, 0.048)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Relay0" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.34, 1.094, 0.45)
+scale = Vector3(0.141, 0.036, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="Cap0" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.34, 1.125, 0.45)
+scale = Vector3(0.1, 0.035, 0.1)
+mesh = SubResource("Box")
+material_override = SubResource("Red")
+
+[node name="Relay1" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.54, 1.094, 0.45)
+scale = Vector3(0.141, 0.036, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="Cap1" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.54, 1.125, 0.45)
+scale = Vector3(0.1, 0.035, 0.1)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Relay2" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.74, 1.094, 0.45)
+scale = Vector3(0.141, 0.036, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="Cap2" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.74, 1.125, 0.45)
+scale = Vector3(0.1, 0.035, 0.1)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="Relay3" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.94, 1.094, 0.45)
+scale = Vector3(0.141, 0.036, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="Cap3" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(0.94, 1.125, 0.45)
+scale = Vector3(0.1, 0.035, 0.1)
+mesh = SubResource("Box")
+material_override = SubResource("Ceramic")
+
+[node name="ContactSlot" type="MeshInstance3D" parent="InterlockingDesk"]
+position = Vector3(-0.12, 1.08, 0.4)
+scale = Vector3(0.15, 0.025, 0.4)
+mesh = SubResource("Box")
+material_override = SubResource("Rubber")
+
+[node name="Lever" type="Node3D" parent="InterlockingDesk"]
+position = Vector3(-0.12, 1.085, 0.4)
+
+[node name="Shaft" type="MeshInstance3D" parent="InterlockingDesk/Lever"]
+position = Vector3(0, 0.1, 0)
+scale = Vector3(0.028, 0.2, 0.028)
+mesh = SubResource("Pipe")
+material_override = SubResource("Edge")
+
+[node name="Grip" type="MeshInstance3D" parent="InterlockingDesk/Lever"]
+position = Vector3(0, 0.2, 0)
+scale = Vector3(0.102, 0.082, 0.095)
+mesh = SubResource("Round")
+material_override = SubResource("Red")
+
+[node name="Dispatcher" type="Node3D" parent="."]
+position = Vector3(-0.65, 0, 0)
+
+[node name="Trousers" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(0, 0.65, 0)
+scale = Vector3(0.47, 0.8, 0.32)
+mesh = SubResource("Round")
+material_override = SubResource("Midnight")
+
+[node name="Tunic" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(0, 1.26, 0)
+scale = Vector3(0.61, 0.76, 0.37)
+mesh = SubResource("Round")
+material_override = SubResource("Uniform")
+
+[node name="Epaulet-1" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.176, 1.52, 0.05)
+scale = Vector3(0.187, 0.05, 0.17)
+rotation = Vector3(0, 0, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Midnight")
+
+[node name="Insignia-1" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.167, 1.55, 0.06)
+scale = Vector3(0.086, 0.01, 0.15)
+rotation = Vector3(0, 0, 0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Epaulet1" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(0.176, 1.52, 0.05)
+scale = Vector3(0.187, 0.05, 0.17)
+rotation = Vector3(0, 0, -0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Midnight")
+
+[node name="Insignia1" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(0.167, 1.55, 0.06)
+scale = Vector3(0.086, 0.01, 0.15)
+rotation = Vector3(0, 0, -0.18)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Placket" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(0, 1.31, 0.179)
+scale = Vector3(0.025, 0.42, 0.017)
+mesh = SubResource("Box")
+material_override = SubResource("Midnight")
+
+[node name="Badge" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.135, 1.37, 0.182)
+scale = Vector3(0.123, 0.055, 0.015)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Head" type="Node3D" parent="Dispatcher"]
+position = Vector3(0, 1.77, 0)
+
+[node name="Portrait" parent="Dispatcher/Head" instance=ExtResource("Face")]
+
+[node name="Crown" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0, 0.244, -0.01)
+scale = Vector3(0.54, 0.225, 0.49)
+mesh = SubResource("Round")
+material_override = SubResource("Midnight")
+
+[node name="CapBand" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0, 0.158, 0.005)
+scale = Vector3(0.501, 0.080, 0.457)
+mesh = SubResource("Pipe")
+material_override = SubResource("Uniform")
+
+[node name="Peak" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0, 0.143, 0.167)
+scale = Vector3(0.427, 0.034, 0.225)
+mesh = SubResource("Round")
+material_override = SubResource("Frame")
+
+[node name="RailBadge" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0, 0.227, 0.222)
+scale = Vector3(0.068, 0.054, 0.014)
+mesh = SubResource("Box")
+material_override = SubResource("Strip")
+
+[node name="Earpad-1" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(-0.214, 0.01, -0.015)
+scale = Vector3(0.074, 0.124, 0.095)
+mesh = SubResource("Round")
+material_override = SubResource("Rubber")
+
+[node name="Earpad1" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0.214, 0.01, -0.015)
+scale = Vector3(0.074, 0.124, 0.095)
+mesh = SubResource("Round")
+material_override = SubResource("Rubber")
+
+[node name="MicArm" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0.187, -0.062, 0.105)
+scale = Vector3(0.016, 0.017, 0.213)
+rotation = Vector3(-0.48, 0, 0)
+mesh = SubResource("Box")
+material_override = SubResource("Frame")
+
+[node name="Mic" type="MeshInstance3D" parent="Dispatcher/Head"]
+position = Vector3(0.178, -0.102, 0.2)
+scale = Vector3(0.043, 0.036, 0.045)
+mesh = SubResource("Round")
+material_override = SubResource("Rubber")
+
+[node name="RestingSleeve" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.257, 1.29, 0.035)
+scale = Vector3(0.175, 0.39, 0.18)
+rotation = Vector3(0, 0, -0.09)
+mesh = SubResource("Round")
+material_override = SubResource("Uniform")
+
+[node name="RestingForearm" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.272, 1.104, 0.163)
+scale = Vector3(0.15, 0.15, 0.36)
+mesh = SubResource("Round")
+material_override = SubResource("Uniform")
+
+[node name="RestingHand" type="MeshInstance3D" parent="Dispatcher"]
+position = Vector3(-0.272, 1.107, 0.336)
+scale = Vector3(0.119, 0.08, 0.147)
+mesh = SubResource("Round")
+material_override = SubResource("Skin")
+
+[node name="Sleeve" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.2, 0.22)
+scale = Vector3(0.12, 0.12, 0.18)
+mesh = SubResource("Round")
+material_override = SubResource("Uniform")
+
+[node name="Forearm" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.2, 0.22)
+scale = Vector3(0.12, 0.12, 0.18)
+mesh = SubResource("Round")
+material_override = SubResource("Uniform")
+
+[node name="Cuff" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.2, 0.22)
+scale = Vector3(0.12, 0.12, 0.18)
+mesh = SubResource("Pipe")
+material_override = SubResource("Strip")
+
+[node name="Hand" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.2, 0.22)
+scale = Vector3(0.12, 0.12, 0.18)
+mesh = SubResource("Round")
+material_override = SubResource("Skin")
+
+[node name="SignalGlow" type="OmniLight3D" parent="SignalBox"]
+position = Vector3(1.3, 2.3, -0.8)
+light_color = Color(0.6, 0.7294117647058823, 0.6901960784313725, 1)
+light_energy = 0.54
+omni_range = 3.5
+
+[node name="ConsoleLamp" type="OmniLight3D" parent="SignalBox"]
+position = Vector3(-0.4, 2.6, 1.1)
+light_color = Color(1.0, 0.8588235294117647, 0.6862745098039216, 1)
+light_energy = 1.05
+omni_range = 3.8
+
+[node name="ShotCamera" type="Camera3D" parent="."]
+position = Vector3(0.51, 1.73, 2.37)
+fov = 41.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("Library")

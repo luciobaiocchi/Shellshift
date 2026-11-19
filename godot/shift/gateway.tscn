@@ -1,0 +1,81 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://art_direction/terminal_theme.tres" id="ConsoleTheme"]
+
+[ext_resource type="Script" path="res://shift/gateway.gd" id="Game"]
+[ext_resource type="Script" path="res://shift/gateway_art.gd" id="Artwork"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.072, 0.091, 0.104, 1)
+content_margin_left = 16.0
+content_margin_right = 16.0
+content_margin_top = 11.0
+content_margin_bottom = 9.0
+border_width_top = 2
+border_color = Color(0.57, 0.46, 0.33, 1)
+
+[node name="Gateway" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("ConsoleTheme")
+script = ExtResource("Game")
+
+[node name="Canvas" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+
+[node name="View" type="SubViewportContainer" parent="Canvas"]
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0,100)
+stretch = true
+stretch_shrink = 2
+texture_filter = 1
+mouse_filter = 2
+
+[node name="Viewport" type="SubViewport" parent="Canvas/View"]
+size = Vector2i(360, 160)
+render_target_update_mode = 4
+
+[node name="Drawing" type="Node2D" parent="Canvas/View/Viewport"]
+script = ExtResource("Artwork")
+
+[node name="Panel" type="PanelContainer" parent="Canvas"]
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Stack" type="VBoxContainer" parent="Canvas/Panel"]
+theme_override_constants/separation = 6
+
+[node name="Location" type="Label" parent="Canvas/Panel/Stack"]
+theme_override_colors/font_color = Color(0.9, 0.72, 0.48, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="Story" type="Label" parent="Canvas/Panel/Stack"]
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 15
+
+[node name="Actions" type="HFlowContainer" parent="Canvas/Panel/Stack"]
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 4
+
+[node name="Travel" type="HFlowContainer" parent="Canvas/Panel/Stack"]
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 4
+
+[node name="Controls" type="Label" parent="Canvas/Panel/Stack"]
+theme_override_font_sizes/font_size = 12
+text = "Arrows · Select     Enter · Use     Esc · Back / Menu"
+autowrap_mode = 3
+modulate = Color(0.69,0.76,0.72,1)
+
+[node name="SessionMenu" type="ConfirmationDialog" parent="."]
+title = "Shellshift"
+dialog_text = "Return to the register? This shift will end."
+ok_button_text = "Return to register"
+cancel_button_text = "Resume"

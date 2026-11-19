@@ -1,0 +1,48 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaJacket.glb" id="Jacket"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaTrousers.glb" id="Trousers"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaUpperL.glb" id="UpperL"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaUpperR.glb" id="UpperR"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaForearmL.glb" id="ForearmL"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaForearmR.glb" id="ForearmR"]
+[ext_resource type="PackedScene" path="res://office/wardrobe/AdaAccessory.glb" id="Accessory"]
+[ext_resource type="PackedScene" path="res://cast/ada.glb" id="Portrait"]
+
+[node name="Ada" type="Node3D"]
+
+[node name="Trousers" parent="." instance=ExtResource("Trousers")]
+
+[node name="Spine" type="Node3D" parent="."]
+position = Vector3(0, 0.91, 0)
+
+[node name="Jacket" parent="Spine" instance=ExtResource("Jacket")]
+
+[node name="Head" type="Node3D" parent="Spine"]
+position = Vector3(0, 0.87, 0)
+
+[node name="Portrait" parent="Spine/Head" instance=ExtResource("Portrait")]
+
+[node name="Accessory" parent="Spine/Head" instance=ExtResource("Accessory")]
+
+[node name="ShoulderL" type="Node3D" parent="Spine"]
+position = Vector3(-0.278, 0.535, 0)
+
+[node name="Sleeve" parent="Spine/ShoulderL" instance=ExtResource("UpperL")]
+
+[node name="Elbow" type="Node3D" parent="Spine/ShoulderL"]
+position = Vector3(0, -0.337, 0)
+rotation = Vector3(-0.36, 0, 0)
+
+[node name="HandAndForearm" parent="Spine/ShoulderL/Elbow" instance=ExtResource("ForearmL")]
+
+[node name="ShoulderR" type="Node3D" parent="Spine"]
+position = Vector3(0.278, 0.535, 0)
+
+[node name="Sleeve" parent="Spine/ShoulderR" instance=ExtResource("UpperR")]
+
+[node name="Elbow" type="Node3D" parent="Spine/ShoulderR"]
+position = Vector3(0, -0.337, 0)
+rotation = Vector3(-0.36, 0, 0)
+
+[node name="HandAndForearm" parent="Spine/ShoulderR/Elbow" instance=ExtResource("ForearmR")]

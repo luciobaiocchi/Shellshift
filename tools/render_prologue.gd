@@ -9,7 +9,7 @@ func render() -> void:
 	var film = menu.get_node("Film")
 	film.show()
 	film.set_process(false)
-	for i in range(film.SECONDS.size()):
+	for i: int in film.SCRIPT.SHOT_ORDER:
 		film.select_shot(i)
 		for frame in range(int(film.SECONDS[i] * 24)):
 			film.elapsed = frame / 24.0

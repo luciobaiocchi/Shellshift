@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://shift/filesystem_materials/fieldstone.jpg" id="fieldstone"]
+
+[resource]
+albedo_color = Color(0.4549, 0.5373, 0.5922, 1)
+albedo_texture = ExtResource("fieldstone")
+roughness = 0.9
+texture_filter = 2
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv1_scale = Vector3(0.47,0.47,0.47)

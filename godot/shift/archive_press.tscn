@@ -1,0 +1,361 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://shift/archive_press.gd" id="Script"]
+[ext_resource type="Texture2D" path="res://shift/filesystem_materials/iron.jpg" id="Texture"]
+
+[sub_resource type="StandardMaterial3D" id="Paint"]
+albedo_color = Color(0.33, 0.41, 0.42, 1)
+roughness = 0.89
+albedo_texture = ExtResource("Texture")
+uv1_triplanar = true
+uv1_scale = Vector3(1.6,1.6,1.6)
+
+[sub_resource type="StandardMaterial3D" id="Case"]
+albedo_color = Color(0.24, 0.29, 0.32, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Recess"]
+albedo_color = Color(0.098, 0.129, 0.15, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Steel"]
+albedo_color = Color(0.52, 0.54, 0.52, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Amber"]
+albedo_color = Color(0.8, 0.61, 0.35, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Stock"]
+albedo_color = Color(0.79, 0.75, 0.63, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Duplicate"]
+albedo_color = Color(0.66, 0.75, 0.69, 1)
+roughness = 0.89
+
+[sub_resource type="StandardMaterial3D" id="Lamp"]
+albedo_color = Color(0.73, 0.78, 0.53, 1)
+roughness = 0.89
+emission_enabled = true
+emission = Color(0.75,0.85,0.61,1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="BoxMesh" id="Block"]
+size = Vector3(1,1,1)
+
+[sub_resource type="CylinderMesh" id="Rod"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 12
+rings = 0
+
+[sub_resource type="SystemFont" id="Type"]
+font_names = PackedStringArray("Menlo","monospace")
+
+[node name="ArchivePress" type="Node3D"]
+script = ExtResource("Script")
+
+[node name="Foot" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.052, 0)
+scale = Vector3(1.18, 0.104, 0.5)
+mesh = SubResource("Block")
+material_override = SubResource("Case")
+
+[node name="Cabinet" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.49, -0.012)
+scale = Vector3(1.12, 0.86, 0.39)
+mesh = SubResource("Block")
+material_override = SubResource("Paint")
+
+[node name="Vent0" type="MeshInstance3D" parent="."]
+position = Vector3(-0.42, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent1" type="MeshInstance3D" parent="."]
+position = Vector3(-0.359, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent2" type="MeshInstance3D" parent="."]
+position = Vector3(-0.298, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent3" type="MeshInstance3D" parent="."]
+position = Vector3(-0.237, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent4" type="MeshInstance3D" parent="."]
+position = Vector3(-0.176, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent5" type="MeshInstance3D" parent="."]
+position = Vector3(-0.11499999999999999, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent6" type="MeshInstance3D" parent="."]
+position = Vector3(-0.05399999999999999, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent7" type="MeshInstance3D" parent="."]
+position = Vector3(0.007000000000000006, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Vent8" type="MeshInstance3D" parent="."]
+position = Vector3(0.068, 0.63, 0.188)
+scale = Vector3(0.029, 0.17, 0.015)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Catch" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.91, 0.027)
+scale = Vector3(1.23, 0.075, 0.5)
+mesh = SubResource("Block")
+material_override = SubResource("Case")
+
+[node name="Back" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.27, -0.084)
+scale = Vector3(1.19, 0.65, 0.21)
+mesh = SubResource("Block")
+material_override = SubResource("Case")
+
+[node name="StayL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.557, 1.25, 0.053)
+scale = Vector3(0.069, 0.64, 0.12)
+mesh = SubResource("Block")
+material_override = SubResource("Steel")
+
+[node name="PistonL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.557, 1.36, 0.103)
+scale = Vector3(0.047, 0.34, 0.047)
+mesh = SubResource("Rod")
+material_override = SubResource("Steel")
+
+[node name="StayR" type="MeshInstance3D" parent="."]
+position = Vector3(0.557, 1.25, 0.053)
+scale = Vector3(0.069, 0.64, 0.12)
+mesh = SubResource("Block")
+material_override = SubResource("Steel")
+
+[node name="PistonR" type="MeshInstance3D" parent="."]
+position = Vector3(0.557, 1.36, 0.103)
+scale = Vector3(0.047, 0.34, 0.047)
+mesh = SubResource("Rod")
+material_override = SubResource("Steel")
+
+[node name="Crown" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.59, 0.021)
+scale = Vector3(1.26, 0.12, 0.38)
+mesh = SubResource("Block")
+material_override = SubResource("Paint")
+
+[node name="SerialPlate" type="MeshInstance3D" parent="."]
+position = Vector3(-0.27, 1.594, 0.216)
+scale = Vector3(0.66, 0.08, 0.012)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Process" type="Label3D" parent="."]
+position = Vector3(-0.27, 1.595, 0.225)
+font = SubResource("Type")
+pixel_size = 0.0008958333333333332
+font_size = 48
+outline_size = 0
+modulate = Color(0.91,0.8,0.6,1)
+text = "PID 043 / RETENTION"
+
+[node name="Indicator" type="MeshInstance3D" parent="."]
+position = Vector3(0.185, 1.595, 0.221)
+scale = Vector3(0.037, 0.024, 0.018)
+mesh = SubResource("Block")
+material_override = SubResource("Lamp")
+
+[node name="Status" type="Label3D" parent="."]
+position = Vector3(0.39, 1.595, 0.223)
+font = SubResource("Type")
+pixel_size = 0.0007916666666666666
+font_size = 48
+outline_size = 0
+modulate = Color(0.91,0.8,0.6,1)
+text = "STANDBY"
+
+[node name="InputWell" type="MeshInstance3D" parent="."]
+position = Vector3(-0.285, 1.26, 0.077)
+scale = Vector3(0.49, 0.51, 0.084)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="InputClip" type="MeshInstance3D" parent="."]
+position = Vector3(-0.285, 1.345, 0.18)
+scale = Vector3(0.42, 0.034, 0.062)
+mesh = SubResource("Block")
+material_override = SubResource("Steel")
+
+[node name="OutputWell" type="MeshInstance3D" parent="."]
+position = Vector3(0.285, 1.26, 0.077)
+scale = Vector3(0.49, 0.51, 0.084)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="OutputClip" type="MeshInstance3D" parent="."]
+position = Vector3(0.285, 1.366, 0.18)
+scale = Vector3(0.42, 0.034, 0.062)
+mesh = SubResource("Block")
+material_override = SubResource("Steel")
+
+[node name="Original" type="Node3D" parent="."]
+position = Vector3(-0.285, 1.121, 0.148)
+
+[node name="Sheet" type="MeshInstance3D" parent="Original"]
+position = Vector3(0, 0, 0)
+scale = Vector3(0.45, 0.32, 0.008)
+mesh = SubResource("Block")
+material_override = SubResource("Stock")
+
+[node name="Kind" type="Label3D" parent="Original"]
+position = Vector3(0, 0.098, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0007499999999999999
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "ORIGINAL"
+
+[node name="Badge" type="Label3D" parent="Original"]
+position = Vector3(0, 0.023, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0013541666666666667
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "H-0317"
+
+[node name="Rule" type="MeshInstance3D" parent="Original"]
+position = Vector3(0, -0.024, 0.005)
+scale = Vector3(0.376, 0.004, 0.002)
+mesh = SubResource("Block")
+material_override = SubResource("Case")
+
+[node name="Date" type="Label3D" parent="Original"]
+position = Vector3(0, -0.085, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0008125
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "WED 16 SEP 2054"
+
+[node name="Copy" type="Node3D" parent="."]
+position = Vector3(0.285, 1.465, 0.148)
+visible = false
+
+[node name="Sheet" type="MeshInstance3D" parent="Copy"]
+position = Vector3(0, 0, 0)
+scale = Vector3(0.45, 0.32, 0.008)
+mesh = SubResource("Block")
+material_override = SubResource("Duplicate")
+
+[node name="Kind" type="Label3D" parent="Copy"]
+position = Vector3(0, 0.098, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0007499999999999999
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "RETAINED COPY"
+
+[node name="Badge" type="Label3D" parent="Copy"]
+position = Vector3(0, 0.023, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0013541666666666667
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "H-0317"
+
+[node name="Rule" type="MeshInstance3D" parent="Copy"]
+position = Vector3(0, -0.024, 0.005)
+scale = Vector3(0.376, 0.004, 0.002)
+mesh = SubResource("Block")
+material_override = SubResource("Case")
+
+[node name="Date" type="Label3D" parent="Copy"]
+position = Vector3(0, -0.085, 0.005)
+font = SubResource("Type")
+pixel_size = 0.0008125
+font_size = 48
+outline_size = 0
+modulate = Color(0.16,0.18,0.18,1)
+text = "THU 17 SEP 2054"
+
+[node name="IntakeLip" type="MeshInstance3D" parent="."]
+position = Vector3(-0.285, 0.85, 0.156)
+scale = Vector3(0.49, 0.21, 0.074)
+mesh = SubResource("Block")
+material_override = SubResource("Paint")
+
+[node name="OutfeedHood" type="MeshInstance3D" parent="."]
+position = Vector3(0.285, 1.46, 0.177)
+scale = Vector3(0.51, 0.29, 0.067)
+mesh = SubResource("Block")
+material_override = SubResource("Paint")
+
+[node name="HoodSlot0" type="MeshInstance3D" parent="."]
+position = Vector3(0.14, 1.466, 0.213)
+scale = Vector3(0.038, 0.049, 0.006)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="HoodSlot1" type="MeshInstance3D" parent="."]
+position = Vector3(0.20600000000000002, 1.466, 0.213)
+scale = Vector3(0.038, 0.049, 0.006)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="HoodSlot2" type="MeshInstance3D" parent="."]
+position = Vector3(0.272, 1.466, 0.213)
+scale = Vector3(0.038, 0.049, 0.006)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="HoodSlot3" type="MeshInstance3D" parent="."]
+position = Vector3(0.338, 1.466, 0.213)
+scale = Vector3(0.038, 0.049, 0.006)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="HoodSlot4" type="MeshInstance3D" parent="."]
+position = Vector3(0.404, 1.466, 0.213)
+scale = Vector3(0.038, 0.049, 0.006)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")
+
+[node name="Ram" type="Node3D" parent="."]
+position = Vector3(0, 1.385, 0)
+
+[node name="Crosshead" type="MeshInstance3D" parent="Ram"]
+position = Vector3(-0.285, 0, 0.143)
+scale = Vector3(0.48, 0.063, 0.112)
+mesh = SubResource("Block")
+material_override = SubResource("Steel")
+
+[node name="Seal" type="MeshInstance3D" parent="Ram"]
+position = Vector3(-0.285, -0.042, 0.141)
+scale = Vector3(0.143, 0.042, 0.095)
+mesh = SubResource("Block")
+material_override = SubResource("Recess")

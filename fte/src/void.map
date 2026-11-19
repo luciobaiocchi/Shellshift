@@ -1,7 +1,7 @@
 {
 "classname" "worldspawn"
 "wad" "sector.wad"
-"message" "Shellshift - Settore Nero"
+"message" "Shellshift - Black Sector"
 {
 ( -2032 -1536 -64 ) ( -2032 3000 -64 ) ( -2032 3000 0 ) slab 0 0 0 1 1
 ( 2032 3000 -64 ) ( 2032 -1536 -64 ) ( 2032 -1536 0 ) slab 0 0 0 1 1
