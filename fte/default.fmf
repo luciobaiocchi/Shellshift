@@ -1,0 +1,5 @@
+game custom
+name "Shellshift"
+basegame sector
+mainconfig "sector.cfg"
+disablehomedir 1

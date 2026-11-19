@@ -1,0 +1,63 @@
+:root{
+  color-scheme:dark;
+  --ink:#27251f; --paper:#dbd3bd; --warm:#f5ca86; --mint:#a2dfbe;
+  --metal:linear-gradient(110deg,#202521b8,#171b19cb),url("assets/iron.jpg");
+  --wood:linear-gradient(#15140fa6,#121410cc),url("assets/timber.jpg");
+  font:15px/1.45 ui-monospace,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#141815;color:#eae1ca}
+header,footer{display:flex;align-items:center;gap:1rem;padding:0 clamp(14px,3vw,48px);background:var(--metal);border-color:#716850}
+header{height:54px;border-bottom:3px ridge #706953;box-shadow:0 4px 14px #0007;position:relative;z-index:1}
+header b{font:bold clamp(18px,2vw,25px) Georgia,serif;letter-spacing:.14em;color:#ffe0a8;text-shadow:1px 2px #171511}
+header i{flex:1}header small{color:var(--mint)}
+header span, header small,footer small,label,.scope,.title span{font:11px/1.4 ui-monospace,monospace;letter-spacing:.1em}
+#desk{min-height:calc(100dvh - 92px);padding:clamp(24px,5.5vh,64px) 4vw;display:flex;justify-content:center;align-items:flex-start;gap:clamp(18px,3vw,50px);
+  background:radial-gradient(ellipse at 45% 24%,#66645238,#0d120ed9 90%),linear-gradient(#20251ece,#20251ece),url("assets/fieldstone.jpg") center/320px}
+aside{display:grid;gap:12px}
+button,select{font:inherit}
+button{min-height:42px;cursor:pointer;background:var(--metal);color:#ede2c6;padding:8px 13px;border:2px solid;border-color:#837960 #201f1a #171915 #736a55;box-shadow:0 1px 4px #0007;line-height:1.2}
+button:enabled:hover{filter:brightness(1.22)}button:enabled:active{transform:translateY(1px);border-style:inset}
+button:disabled{color:#9f9e90;filter:saturate(.25);cursor:default}button:focus-visible,select:focus-visible{outline:3px solid #ffd287;outline-offset:3px}
+aside button{display:grid;place-items:center;gap:2px;width:82px;height:64px;color:var(--warm);font:26px Georgia,serif}
+aside small{font:11px monospace;color:#e5dfce}
+.workspace{flex:1;max-width:990px;display:grid;grid-template-columns:1.22fr 1fr;align-items:start;gap:clamp(16px,2.2vw,32px)}
+section{min-width:0;position:relative;background:var(--metal);border:3px ridge #746c56;box-shadow:0 10px 18px #0008,0 2px 0 #141612}
+.title,.hud{background:var(--metal);color:#f3d599}
+.title{padding:10px 16px;border-bottom:2px groove #756b55;display:flex;align-items:center;justify-content:space-between;letter-spacing:.06em;font-weight:bold;font-size:14px}
+.title span{padding:1px 5px;border:1px solid #776d57;color:#cab995}
+#mail{background:var(--wood);padding:0 9px 9px}
+#mail .title{margin:0 -9px}
+.district{display:block;width:100%;height:clamp(95px,13vw,162px);object-fit:cover;object-position:center;image-rendering:pixelated;margin-top:9px;border:2px inset #766e58}
+article{padding:clamp(17px,2vw,27px)}
+#mail article{background:linear-gradient(105deg,#d4c8a9f5,#e6ddc5f5 60%,#c7b99cee),url("assets/flagstone.jpg");color:var(--ink);border:1px solid #81775d}
+label{display:block;font-weight:bold}#mail label{color:#564c3b}
+h1{font:normal clamp(32px,3.2vw,49px)/1.04 Georgia,serif;letter-spacing:-.047em;margin:10px 0 12px;color:#332d23}
+#mail p{font:18px/1.42 Georgia,serif;margin:0}
+.paper{display:flex;align-items:center;gap:12px;border-block:1px solid #9f947b;margin:16px 0;padding:10px 0;font-weight:bold}
+.paper strong{border:1px solid #918165;background:#eee3c8;color:#60553e;font:bold 17px Georgia,serif;padding:6px 7px;box-shadow:2px 2px #bcaf92}
+.paper small{display:block;font:12px monospace;color:#524c41}
+#archive{margin-top:30px}#archive article{padding-top:14px}
+.scope{margin:12px 12px 0;padding:12px 15px;color:var(--mint);border:4px ridge #544f41;background:repeating-linear-gradient(0deg,#04150f30 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,#31493c,#101e19 83%);box-shadow:inset 0 0 12px #020604}
+.scope svg{display:block;width:100%;height:88px;filter:drop-shadow(0 0 2px #8afba673)}
+.scope small{font-size:10px}.scope progress{display:block;width:100%;height:5px;margin:2px 0 8px;appearance:none;border:0;color:var(--mint);background:#34443a}
+progress::-webkit-progress-bar{background:#34443a}progress::-webkit-progress-value{background:var(--meter,var(--mint))}progress::-moz-progress-bar{background:var(--meter,var(--mint))}
+[data-phase=denied]{--meter:#f4ae63}[data-phase=denied] #line{color:#ffd095}
+select{width:100%;display:block;margin:7px 0 12px;padding:10px;color:#f1e5c9;background:#242921;border:2px inset #827865}
+#send, #deliver:enabled{background:linear-gradient(#42614cee,#304335ed),url("assets/iron.jpg");color:#edffe6}
+article .exit,#back{background:linear-gradient(#806338e8,#58452be6),url("assets/timber.jpg");color:#ffe7b2}
+#status{min-height:2.9em;font-size:13px;color:#ded9c9}
+footer{min-height:38px;border-top:2px ridge #736849;font-size:12px}footer b{color:var(--warm)}footer small{margin-left:auto}
+#world{height:calc(100dvh - 92px);position:relative;background:#141713}
+canvas{width:100%;height:100%;display:block;image-rendering:pixelated;touch-action:none}
+.hud{position:absolute;top:12px;left:12px;width:min(330px,80%);padding:9px 13px;border:2px ridge #807761;box-shadow:0 3px 6px #0008;pointer-events:none}
+.hud label{color:#b6d1b7;font-size:10px}.hud h2{font:bold 17px Georgia,serif;margin:3px 0;color:#ffe1a8}.hud p{font:12px/1.4 monospace;margin:0;color:#e8e3d4}
+#pad,#back{position:absolute;bottom:max(12px,env(safe-area-inset-bottom))}
+#pad{left:12px;display:flex;gap:3px}#pad button{width:44px;min-height:44px;touch-action:none}#back{right:12px}
+[hidden]{display:none!important}
+@media(max-width:760px){
+  #desk{display:block;padding:14px}.workspace{grid-template-columns:1fr;gap:14px}#archive{margin:0}
+  aside{display:flex;gap:6px;margin-bottom:12px}aside button{width:auto;flex:1;height:44px;display:flex;justify-content:center;gap:6px;font-size:19px}
+  .district{height:105px}header,footer{gap:8px;padding-inline:12px}header small{font-size:9px}footer small{display:none}
+  header span{display:none}#pad button{padding:5px}.hud{max-width:75%}
+}
