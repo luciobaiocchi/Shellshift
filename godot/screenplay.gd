@@ -9,7 +9,7 @@ const BADGES := ["H-0317","H-0442","H-0528"]
 const MEMORIES := ["Dome notebook","Valley radio","Witness bench"]
 const OFFICE_CUES := [
 	[0.0,""],
-	[2.8,"“Forty-eight out of forty-eight.”"],
+	[2.8,"“It ran all forty-eight over lunch.”"],
 	[6.2,"“Is it really only four?”"],
 	[9.0,"“Come on. Bring your coat.”"]
 ]
@@ -61,16 +61,16 @@ const ARCHIVE := {
 const ROUTES := [
 	{
 		0:[[0.0,""],
-		   [1.45,"“Mum, I saved your stool.”"],
-		   [5.35,"All the tests passed. It was only four."],
-		   [8.65,"Nico closed the lid. “Go. I’ll lock up.”"]],
+		   [2.8,"“It ran all forty-eight over lunch.”"],
+		   [5.9,"“Is it really only four?”"],
+		   [9.0,"“Go, Ada. I’ll lock up.”"]],
 		1:[[0.0,"Mum brought two cups. I kept our place in the red book."],
 		   [4.8,"“See that third dot, Mum? It was over here last Thursday.”"],
 		   [9.45,"“Show me.”"]],
 		5:[[0.0,""],
 		   [2.1,"After Mum died, I still poured two cups."],
-		   [6.2,"I gave the agent our Thursdays. It could watch from the roof."],
-		   [11.0,"Downstairs, I could replay the sky from that night."]],
+		   [6.2,"I asked it to take one Thursday. I left the switch on."],
+		   [11.0,"Downstairs, I kept playing the Thursday with her voice on it."]],
 		8:[[0.0,"“Will I get the notebook back?”"],
 		   [3.2,"The antimatter gun flashed. I heard the cover hit the floor."],
 		   [8.3,"I was inside the computer. I still reached for it."]],
@@ -80,9 +80,9 @@ const ROUTES := [
 	},
 	{
 		0:[[0.0,""],
-		   [1.5,"“Tom? Can you hear me past the bridge?”"],
-		   [5.35,"All forty-eight tests passed. We could go."],
-		   [9.0,"Time to fix my brother’s radio."]],
+		   [2.8,"Ada checked twice. The agent had run all forty-eight."],
+		   [5.9,"“Is it really only four?”"],
+		   [9.0,"Still time to fix Tom’s radio before dark."]],
 		1:[[0.0,"Three village relays on the bench. I pulled the middle cable."],
 		   [5.15,"The bridge was under water. My brother said, “Still here, Nic.”"],
 		   [9.1,"So the line held."]],
@@ -99,15 +99,15 @@ const ROUTES := [
 	},
 	{
 		0:[[0.0,""],
-		   [1.35,"“Jo. Keep your eye on the second lamp.”"],
-		   [5.35,"Next door, all forty-eight tests passed."],
-		   [8.5,"I heard them laugh. Home at four for once."]],
+		   [2.8,"I heard Ada through the wall. “It ran all forty-eight.”"],
+		   [5.9,"Then Nico. “Is it really only four?”"],
+		   [9.0,"Jo went to get our coats."]],
 		1:[[0.0,"Jo had the chair on my left. I covered one lamp."],
 		   [4.9,"I asked if she’d sign. “Move your thumb first.”"],
 		   [9.0,"I kept her answer."]],
 		5:[[0.0,""],
 		   [1.8,"Jo’s chair was empty. The night bell kept going."],
-		   [6.0,"I let the agent make the second mark. I wanted a quiet room."],
+		   [6.0,"I let it sign for Jo that night. The bell stopped mid-ring."],
 		   [11.6,"In the morning, both marks looked like mine."]],
 		8:[[0.0,"My transfer form already had two signatures."],
 		   [3.7,"The antimatter gun flashed. My stamp fell face down."],
@@ -122,11 +122,11 @@ static func cues(profile: int, shot: int) -> Array:
 		return ROUTES[profile][shot]
 	return ARCHIVE[shot]
 
-static func source(profile: int, shot: int, elapsed: float) -> String:
+static func source(profile: int, shot: int, _elapsed: float) -> String:
 	if ARCHIVE_SOURCES.has(shot):
 		return ARCHIVE_SOURCES[shot]
 	match shot:
-		0: return NAMES[profile] + (" · Friday afternoon" if elapsed>=5.35 else " · before the shift")
+		0: return NAMES[profile] + " · Friday afternoon"
 		1,5: return NAMES[profile]+" · "+MEMORIES[profile]
 		8: return NAMES[profile]+" · transfer record"
 		_: return "Terminal "+BADGES[profile]

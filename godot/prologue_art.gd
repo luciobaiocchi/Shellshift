@@ -18,8 +18,6 @@ var witness: Node3D
 var narrator: Dictionary
 var gate: Node3D
 var dispatch: Node3D
-var paperwork: Node3D
-var daughter: Dictionary
 var visitor: Dictionary
 var sheets: Node3D
 
@@ -32,7 +30,6 @@ func build(host, index: int) -> void:
 			add_child(private_memory)
 			private_memory.build(stage,shot==1)
 		2: campaign()
-		3: discharge()
 		4: laboratory()
 		6: viaduct()
 		7: concourse()
@@ -78,19 +75,6 @@ func campaign() -> void:
 	text_plate(board,Vector3(0,-1.10,.20),"2027 CAMPAIGN",.18,AMBER)
 	stage.eye = Vector3(2.2,1.88,6.9)
 	stage.target = Vector3(0,2.12,-.8)
-
-func discharge() -> void:
-	hospital_exterior()
-	# The same brass pin is visible when Mara keeps a seat for Ada at the dome.
-	narrator = stage.actors.back()
-	daughter = stage.actors[0]
-	box(narrator.spine,Vector3(.12,.44,.16),Vector3(.055,.023,.012),AMBER)
-	paperwork = stage.joint(narrator.arms[0].get_node("Elbow"),Vector3(.008,-.368,.045))
-	box(paperwork,Vector3.ZERO,Vector3(.157,.087,.004),IVORY)
-	box(paperwork,Vector3(0,.033,.003),Vector3(.157,.013,.003),COPPER)
-	text_plate(paperwork,Vector3(0,.004,.004),"RETURN",.019,INK)
-	for i in 7:
-		box(paperwork,Vector3(-.058+i*.013,-.021,.004),Vector3(.005,.012,.002),INK)
 
 func hospital_exterior(glazing: Material = null) -> void:
 	stage.key.light_energy = .61
@@ -145,71 +129,146 @@ func reach(actor: Dictionary, side: int, target_point: Vector3, elbow_hint: Vect
 	var lower_direction := upper.global_basis.inverse()*(start+ray*distance-joint_at)
 	lower.quaternion = Quaternion(Vector3.DOWN,lower_direction.normalized())
 
-func reunion(t: float) -> void:
-	var arrival := smoothstep(.7,3.0,t)
-	var close := smoothstep(5.0,6.7,t)
-	var embrace := smoothstep(10.3,12.05,t)
-	var settle := smoothstep(12.0,13.6,t)
-	daughter.body.position = Vector3(lerpf(-.95,-.59,arrival)+.14*close+.27*embrace,0,.04+.23*embrace)
-	narrator.body.position = Vector3(lerpf(.82,.54,arrival)-.12*close-.24*embrace,0,lerpf(-.32,0,arrival)-.08*embrace)
-	daughter.spine.position.y = .91-.10*embrace
-	daughter.body.rotation.y = 1.10+.34*embrace
-	narrator.body.rotation.y = -1.06-.40*embrace
-	daughter.head.rotation = Vector3(.055-.21*close+.51*embrace,.28-.49*embrace,.05+.22*embrace)
-	narrator.head.rotation = Vector3(.10+.13*close-.24*embrace,-.32+.31*embrace,-.035-.13*embrace)
-	for lip: MeshInstance3D in daughter.lips:
-		lip.set_blend_shape_value(0,.73*arrival-.47*embrace)
-	for lip: MeshInstance3D in narrator.lips:
-		lip.set_blend_shape_value(0,.47*arrival+.25*settle)
-	var ticket_hand: Vector3 = narrator.body.position+Vector3(-.19,1.20,.02)
-	reach(narrator,0,ticket_hand,narrator.body.position+Vector3(.09,1.10,-.36))
-	paperwork.global_rotation = Vector3(-.16,.29,.11)
-	var collar: Vector3 = daughter.spine.to_global(Vector3(-.13,.55,.15))
-	var hand: Vector3 = narrator.body.position + Vector3(-.10,.94,.29)
-	hand = hand.lerp(collar+Vector3(0,.014*sin(t*3.5),0),close)
-	hand = hand.lerp(daughter.body.position+Vector3(-.065,1.41,.24),embrace)
-	reach(narrator,1,hand,narrator.body.position+Vector3(-.22,1.15,.38))
-	for side in 2:
-		var sign_x := -1.0 if side==0 else 1.0
-		var rest: Vector3 = daughter.body.to_global(Vector3(sign_x*.27,.91,.12))
-		var wrap: Vector3 = narrator.body.to_global(Vector3(sign_x*.19,1.36,-.13))
-		reach(daughter,side,rest.lerp(wrap,embrace),daughter.body.to_global(Vector3(sign_x*.35,1.19,.22)))
-	if t < 2.8:
-		return
-	if t < 5.7:
-		var slip := paperwork.global_position
-		stage.camera.position = slip + Vector3(-.14,.10,.49)
-		stage.camera.look_at(slip)
-	elif t < 10.3:
-		stage.camera.position = Vector3(.13,1.72,1.80-.018*(t-5.7))
-		stage.camera.look_at(Vector3(-.03,1.65,.045))
-	else:
-		stage.camera.position = Vector3(.59,1.68,1.85)
-		stage.camera.look_at(Vector3(0,1.52,.11))
-
 func laboratory() -> void:
-	for i in 3:
-		var rack: Node3D = stage.joint(self,Vector3(4.85+i*.78,0,-1.7))
-		box(rack,Vector3(0,1.24,0),Vector3(.74,2.48,.52),INK)
-		for row in 9:
-			var y := .23+.235*row
-			box(rack,Vector3(0,y,.277),Vector3(.63,.194,.03),GLASS)
-			box(rack,Vector3(-.12,y,.30),Vector3(.23,.025,.015),INK)
-			box(rack,Vector3(.24,y,.30),Vector3(.036,.029,.016),AMBER if row%3==0 else MINT)
-	board = stage.joint(self,Vector3(.18,2.35,-2.05))
-	box(board,Vector3.ZERO,Vector3(3.7,1.54,.12),INK)
-	box(board,Vector3(0,0,.07),Vector3(3.54,1.39,.03),GLASS.darkened(.37))
-	text_plate(board,Vector3(0,.42,.10),"RESEARCH   /   LAB 09",.14,IVORY)
-	readout = text_plate(board,Vector3(0,-.1,.10),"SEARCH IN PROGRESS",.19,AMBER)
+	# The inspection bench occupies its own enclosed bay in the municipal building.
+	position.x = 42.
+	var paint := Color("#8b958c")
+	var lino := Color("#566963")
+	var oak := Color("#936d52")
+	var steel := Color("#495957")
+	var paper := Color("#ecdfc3")
+	stage.key.light_energy = .40
+	stage.key.rotation_degrees = Vector3(-35,-36,0)
+	stage.camera.environment.ambient_light_color = Color("#c1c6be")
+	stage.camera.environment.ambient_light_energy = .46
+	box(self,Vector3(0,-.085,-.10),Vector3(8.3,.17,7.7),lino)
+	box(self,Vector3(0,1.63,-2.39),Vector3(8.3,3.26,.15),paint)
+	box(self,Vector3(-3.83,1.63,.1),Vector3(.15,3.26,5.2),paint.darkened(.08))
+	box(self,Vector3(3.73,1.63,.10),Vector3(.15,3.26,5.2),paint.darkened(.14))
+	box(self,Vector3(0,3.24,.2),Vector3(8.3,.12,5.5),Color("#a4a59a"))
+	box(self,Vector3(0,.40,-2.28),Vector3(7.56,.80,.10),lino)
+	box(self,Vector3(0,.80,-2.20),Vector3(7.56,.055,.06),steel)
+	for x in [-2.7,-1.65,.1,1.81,3.16]:
+		box(self,Vector3(x,.39,-2.22),Vector3(.017,.72,.045),steel.lightened(.08))
+	# Side lights sit above the service window. The daylight slats catch a warm edge.
+	for i in 2:
+		var x := -2.77+i*.83
+		box(self,Vector3(x,1.79,-2.27),Vector3(.83,1.42,.10),steel)
+		box(self,Vector3(x,1.8,-2.20),Vector3(.74,1.31,.035),Color("#b5c4b5"))
+		for slat in 9:
+			var blade := box(self,Vector3(x,2.34-slat*.127,-2.156),Vector3(.738,.052,.086),Color("#85938a"))
+			blade.rotation.x = -.32
+		box(self,Vector3(x,1.08,-2.17),Vector3(.84,.046,.24),steel)
+	# Original proof and elapsed machine time remain legible on the relay's face.
+	board = stage.joint(self,Vector3(.12,1.82,-2.22))
+	box(board,Vector3.ZERO,Vector3(2.57,1.30,.20),steel)
+	box(board,Vector3(-.11,.02,.118),Vector3(2.15,1.03,.06),INK)
+	box(board,Vector3(-.11,.02,.154),Vector3(2.05,.94,.023),Color("#253d3c"))
+	text_plate(board,Vector3(-.1,.325,.171),"ASTER   /   PROOF 17",.090,Color("#ccc6a0"))
+	readout = text_plate(board,Vector3(-.1,.008,.172),"RUNNING",.146,Color("#eec486"))
 	narrator = stage.actors.back()
-	var strap := box(narrator.spine,Vector3(-.11,.396,.154),Vector3(.036,.28,.016),COPPER)
-	strap.rotation.z = -.26
-	box(narrator.spine,Vector3(-.08,.244,.17),Vector3(.104,.077,.016),IVORY)
-	# The rubber stamp moves with the reviewer's palm, down once onto the paper.
-	var stamp_hand: Node3D = narrator.arms[1].get_node("Elbow")
-	box(stamp_hand,Vector3(0,-.395,.044),Vector3(.144,.045,.094),COPPER)
-	rod(stamp_hand,Vector3(0,-.395,.044),Vector3(0,-.337,.044),.025,INK)
-	box(self,Vector3(.92,.952,.10),Vector3(.49,.02,.39),IVORY)
+	narrator.lab_elapsed = text_plate(board,Vector3(-.1,-.286,.172),"START    23:11",.077,Color("#a7c6b1"))
+	for i in 3:
+		box(board,Vector3(1.12,.33-i*.17,.124),Vector3(.059,.047,.027),[AMBER,MINT,INK][i])
+	for i in 6:
+		box(board,Vector3(1.10,-.23-i*.039,.119),Vector3(.16,.015,.014),INK)
+	for x in [-1.03,.98]:
+		rod(self,Vector3(x,.42,-2.09),Vector3(x,1.30,-2.09),.017,steel)
+	# A second testing station and filing cabinet close the rear of the room.
+	var back: Node3D = stage.joint(self,Vector3(-1.22,0,-1.27))
+	box(back,Vector3(0,.905,0),Vector3(1.95,.083,.78),oak)
+	for x in [-.80,.81]: box(back,Vector3(x,.43,0),Vector3(.065,.86,.63),steel)
+	box(back,Vector3(-.30,1.04,0),Vector3(.73,.18,.36),steel)
+	box(back,Vector3(-.30,1.045,.19),Vector3(.61,.115,.018),INK)
+	for i in 5:
+		rod(back,Vector3(-.49+.097*i,1.045,.2),Vector3(-.49+.097*i,1.045,.235),.025,AMBER if i == 3 else MINT)
+	box(back,Vector3(.32,.968,.11),Vector3(.29,.025,.34),paper)
+	var cabinet: Node3D = stage.joint(self,Vector3(2.60,.02,-1.96))
+	box(cabinet,Vector3(0,1.11,0),Vector3(1.16,2.21,.48),steel)
+	for row in 5:
+		var y := .26+row*.427
+		box(cabinet,Vector3(0,y,.26),Vector3(1.07,.385,.04),Color("#788880"))
+		box(cabinet,Vector3(0,y+.03,.295),Vector3(.26,.069,.023),INK)
+		box(cabinet,Vector3(0,y+.03,.310),Vector3(.18,.042,.009),paper)
+		box(cabinet,Vector3(0,y-.064,.306),Vector3(.28,.021,.05),steel)
+	var lamp: Node3D = stage.joint(self,Vector3(.36,2.93,-.24))
+	box(lamp,Vector3.ZERO,Vector3(1.70,.11,.27),steel)
+	box(lamp,Vector3(0,-.064,0),Vector3(1.55,.033,.18),Color("#f4dfb4"))
+	for x in [-.64,.64]: rod(lamp,Vector3(x,.03,0),Vector3(x,.28,0),.012,INK)
+	var tasklight := SpotLight3D.new()
+	add_child(tasklight)
+	tasklight.position = Vector3(-1.08,2.69,.91)
+	tasklight.look_at(to_global(Vector3(.50,1.0,-.03)))
+	tasklight.light_color = Color("#ffdfac")
+	tasklight.light_energy = 1.45
+	tasklight.spot_range = 5.0
+	tasklight.spot_angle = 65
+	tasklight.spot_attenuation = .63
+	tasklight.light_specular = .15
+	tasklight.shadow_enabled = true
+	var window_light := OmniLight3D.new()
+	add_child(window_light)
+	window_light.position = Vector3(-1.87,2.12,-1.08)
+	window_light.light_energy = .64
+	window_light.light_color = Color("#d8ece8")
+	window_light.omni_range = 4.6
+	window_light.light_specular = .12
+	# The counter's pay ledger sits beside six separate monthly examination bundles.
+	var bench: Node3D = stage.joint(self,Vector3(.40,0,.27))
+	box(bench,Vector3(0,.945,0),Vector3(2.53,.092,.85),oak)
+	box(bench,Vector3(0,.997,0),Vector3(2.48,.014,.81),Color("#4d635b"))
+	box(bench,Vector3(0,.884,0),Vector3(2.42,.080,.73),steel)
+	for x in [-1.08,1.08]:
+		for z in [-.30,.30]: box(bench,Vector3(x,.44,z),Vector3(.048,.88,.048),steel)
+	var files: Node3D = stage.joint(self,Vector3(-.23,1.011,.25))
+	var months := ["JAN","FEB","MAR","APR","MAY","JUN"]
+	for i in 6:
+		var file: Node3D = stage.joint(files,Vector3(floori(i/3)*.422+(i%3)*.008,(i%3)*.050,-(i%3)*.028))
+		file.rotation.y = -.032+.019*(i%3)
+		box(file,Vector3(0,.024,0),Vector3(.398,.039,.291),paper.darkened(.11))
+		for y in [.003,.046]:
+			box(file,Vector3(0,y,0),Vector3(.412,.007,.303),Color("#a9875d").darkened(.045*(i%3)))
+		box(file,Vector3(.02,.026,.157),Vector3(.28,.044,.009),paper)
+		text_plate(file,Vector3(.02,.026,.163),months[i]+"  /  30",.031,INK)
+	var accounts: Node3D = stage.joint(self,Vector3(-.16,1.012,.57))
+	accounts.rotation.x = -1.04
+	box(accounts,Vector3(0,.063,0),Vector3(.43,.19,.010),paper)
+	text_plate(accounts,Vector3(0,.108,.009),"CITY PAYROLL",.038,INK)
+	text_plate(accounts,Vector3(0,.041,.009),"JAN – JUN  /  2 EXAMINERS",.021,INK)
+	narrator.lab_form = stage.joint(self,Vector3(.87,1.017,.31))
+	var form: Node3D = narrator.lab_form
+	box(form,Vector3(0,-.002,0),Vector3(.44,.015,.39),Color("#866b4d"))
+	box(form,Vector3(0,.010,0),Vector3(.407,.009,.363),paper)
+	var printface: Node3D = stage.joint(form,Vector3(0,.0155,0))
+	printface.rotation.x = -PI/2
+	text_plate(printface,Vector3(0,.116,0),"FINAL REVIEW",.044,INK)
+	text_plate(printface,Vector3(0,.054,0),"PROOF 17   /   28 JUN 2030",.024,INK)
+	for i in 3:
+		box(printface,Vector3(-.105,-.020-i*.033,.001),Vector3(.124-.02*(i%2),.004,.001),Color("#959181"))
+	var ink := text_plate(printface,Vector3(.074,-.075,.001),"VERIFIED",.030,Color("#924b3d"))
+	ink.name = "Seal"
+	narrator.lab_ink = ink
+	var stamp: Node3D = stage.joint(self,Vector3.ZERO)
+	stamp.name = "ExaminerStamp"
+	narrator.lab_stamp = stamp
+	box(stamp,Vector3(0,.010,0),Vector3(.147,.020,.071),Color("#443c35"))
+	box(stamp,Vector3(0,.030,0),Vector3(.150,.020,.075),Color("#aa7d52"))
+	rod(stamp,Vector3(0,.034,0),Vector3(0,.102,0),.023,steel)
+	stage.round_part(stamp,Vector3(0,.106,0),Vector3(.080,.062,.073),Color("#80543d"))
+	box(self,Vector3(1.105,1.025,.105),Vector3(.195,.043,.122),steel)
+	box(self,Vector3(1.105,1.050,.105),Vector3(.161,.009,.093),Color("#76524c"))
+	narrator.body.position = to_global(Vector3(.70,0,-.21))
+	narrator.body.rotation.y = .16
+	# Fold the individual fingers around the turned wooden handle. The rest of
+	# the body still follows the same time-scrubbable block as the other actors.
+	var hand = narrator.driver._rig
+	var knuckles: Basis = hand.orient("L Hand") * hand.hand_offsets["L"].inverse()
+	hand.fingers("L",knuckles,.77,.46)
+	var colleague: Dictionary = stage.actors.front()
+	colleague.body.position = to_global(Vector3(-1.05,0,-1.59))
+	colleague.body.rotation.y = .12
+	var pencil := rod(self,Vector3(-.93,.969,-1.145),Vector3(-.89,1.11,-1.17),.006,Color("#ab733e"))
+	narrator.lab_pencil = pencil
 
 func viaduct() -> void:
 	box(self,Vector3(0,.06,4.24),Vector3(29,.12,1.6),Color("#46667a"))
@@ -238,16 +297,15 @@ func concourse() -> void:
 	text_plate(self,Vector3(2.52,3.09,-.014),"TRANSFERS  →",.165,AMBER)
 	for i in range(-4,5):
 		box(self,Vector3(i*1.6,.025,.91),Vector3(.65,.015,.096),IVORY.darkened(.46))
-	stage.person(Vector3(2.02,0,.82),Color("#62667e"),INK,"watch",-.78)
+	stage.person(Vector3(2.02,0,.82),"ren","watch",-.78)
 	narrator = stage.actors.back()
-	box(narrator.spine,Vector3(.13,.437,.16),Vector3(.12,.067,.015),AMBER)
 	gate = stage.joint(self,Vector3(2.34,0,.96))
 	rod(gate,Vector3.ZERO,Vector3(0,1.09,0),.047,GLASS)
 	for y in [.64,1.02]:
 		rod(gate,Vector3(0,y,0),Vector3(0,y,-.94),.028,IVORY)
 	for z in [-.24,-.54,-.91]:
 		rod(gate,Vector3(0,.64,z),Vector3(0,1.02,z),.022,GLASS)
-	stage.person(Vector3(1.2,0,1.02),stage.WOOD,GLASS,"watch",.64)
+	stage.person(Vector3(1.2,0,1.02),"extra_b","watch",.64)
 	visitor = stage.actors.back()
 	sheets = stage.joint(self,Vector3(1.44,1.13,1.25))
 	for i in 3:
@@ -293,20 +351,73 @@ func frame(t: float) -> void:
 		2:
 			var copy := ["A cure for all.","Income for all.","An end to hunger."]
 			readout.text = copy[mini(2,floori(t/4.8))]
-		3:
-			reunion(t)
 		4:
-			readout.text = "PROOF COMPLETE" if t>3.7 else "SEARCH IN PROGRESS"
-			var review := smoothstep(5.2,7.0,t)
-			narrator.head.rotation.x = -.08+.32*review
-			narrator.body.rotation.y = -.8-.7*review
-			narrator.arms[1].rotation.x = -.69-.57*review+.55*(smoothstep(11.4,11.76,t)-smoothstep(11.82,12.15,t))
-			if t>6.4:
-				stage.camera.position = Vector3(1.5,2.4,2.05-.035*(t-6.4))
-				stage.camera.look_at(Vector3(.15,2.28,-1.9))
-			if t>9.85:
-				stage.camera.position = Vector3(-.91,1.57,2.54)
-				stage.camera.look_at(Vector3(.89,1.46,.60))
+			var finished := t >= 3.72
+			var next_run := t >= 10.0
+			readout.text = "NEXT DESIGN READY" if next_run else "PROOF COMPLETE" if finished else "SEARCHING"
+			narrator.lab_elapsed.text = "ASTER 03    /    REVISION B" if next_run else "23:11   —   04:38" if finished else "START    23:11"
+			var stamp: Node3D = narrator.lab_stamp
+			var form: Node3D = narrator.lab_form
+			# Its origin is the face of the rubber die. Both the die and the mark
+			# share the form's plane for the five-frame compression of the handle.
+			var parked := Vector3(1.105,1.055,.105)
+			var sealed := to_local(form.to_global(Vector3(.074,.0165,.075)))
+			var lift := smoothstep(8.98,9.62,t)
+			var swing := smoothstep(9.25,10.47,t)
+			var press := smoothstep(11.32,11.72,t)
+			var release := smoothstep(11.99,12.46,t)
+			var set_back := smoothstep(13.10,14.38,t)
+			stamp.position = parked.lerp(sealed,swing).lerp(parked,set_back)
+			stamp.position.y += .125*lift*(1.-press)+.112*release*(1.-set_back)
+			stamp.rotation.y = -.13*(1.-swing)+.04*swing*(1.-set_back)
+			narrator.lab_ink.visible = t >= 11.78
+			var body: Node3D = narrator.body
+			var noticing := smoothstep(2.7,4.2,t)*(1.-smoothstep(5.4,6.45,t))
+			var watching := smoothstep(12.76,14.0,t)
+			narrator.head.rotation = Vector3(.27-.35*noticing-.29*watching,-.10-.32*noticing-.36*watching,-.025)
+			narrator.spine.rotation = Vector3(.047+.076*press*(1.-release),-.09,0)
+			var grasp := smoothstep(7.85,9.02,t)*(1.-smoothstep(14.38,14.85,t))
+			var own_edge := form.to_global(Vector3(-.106,.036,-.084))
+			var resting := body.to_global(Vector3(.285,1.10,.20))
+			var lever := stamp.to_global(Vector3(0,.114,.006))
+			narrator.driver.hand_targets = {"L":resting.lerp(lever,grasp),"R":own_edge}
+			reach(narrator,1,narrator.driver.hand_targets.L,body.to_global(Vector3(.35,1.15,.04)))
+			reach(narrator,0,own_edge,body.to_global(Vector3(-.40,1.18,.07)))
+			var colleague: Dictionary = stage.actors.front()
+			var pencil: Node3D = narrator.lab_pencil
+			pencil.position.x = -.91+.014*sin(t*2.1)
+			colleague.driver.hand_targets = {
+				"L":pencil.global_position+Vector3(0,.015,0),
+				"R":to_global(Vector3(-1.15,1.005,-1.155))
+			}
+			for side in 2:
+				var key := "L" if side == 1 else "R"
+				reach(colleague,side,colleague.driver.hand_targets[key],colleague.body.to_global(Vector3(.39 if side==1 else -.39,1.19,.09)))
+			colleague.head.rotation = Vector3(.31+.018*sin(.8*t),.13,.025)
+			var cam: Vector3
+			var look: Vector3
+			if t < 3.72:
+				cam = Vector3(-1.62+.105*t,1.86,2.86-.066*t)
+				look = Vector3(-.04,1.47,-.65)
+				stage.camera.fov = 45
+			elif t < 6.45:
+				cam = Vector3(.37,1.96,.13-.047*(t-3.72))
+				look = Vector3(-.005,1.80,-2.19)
+				stage.camera.fov = 34
+			elif t < 9.85:
+				cam = Vector3(.12-.022*(t-6.45),1.39,1.34)
+				look = Vector3(-.095,1.105,.325)
+				stage.camera.fov = 32
+			elif t < 12.9:
+				cam = Vector3(1.04,1.68,.99)
+				look = Vector3(.91,1.075,.295)
+				stage.camera.fov = 29
+			else:
+				cam = Vector3(.02+.028*(t-12.9),1.74,1.23)
+				look = Vector3(.48,1.66,-.45)
+				stage.camera.fov = 37
+			stage.camera.position = to_global(cam)
+			stage.camera.look_at(to_global(look))
 		6:
 			if (t>=1 and t<4.8) or t>=9.0:
 				dispatch.frame(t-1.0 if t<4.8 else t)
@@ -325,13 +436,22 @@ func frame(t: float) -> void:
 			var retrieve := smoothstep(10.65,11.78,t)
 			var stoop := smoothstep(8.65,10.42,t)*(1.0-retrieve)
 			visitor.spine.rotation.x = .96*stoop
-			visitor.spine.position.y = .91-.22*stoop
-			visitor.body.get_node("Trousers").scale.y = 1.0-.22*stoop
+			visitor.spine.position.y = .91-.65*stoop
 			visitor.head.rotation.x = .35*stoop
 			visitor.arms[1].rotation.x = -.16-1.03*stoop
 			sheets.position.y = lerpf(1.05,.046,fall)+.98*retrieve
 			sheets.position.z = 1.25+.18*fall
 			sheets.rotation.z = .36*sin(fall*PI)
+			sheets.rotation.x = -.52*(1.-fall)-.46*retrieve
+			var holding := 1.-smoothstep(8.05,8.30,t)+smoothstep(8.65,10.42,t)
+			var left_elbow: Node3D = visitor.arms[1].get_node("Elbow")
+			var right_elbow: Node3D = visitor.arms[0].get_node("Elbow")
+			var paper_edge := sheets.to_global(Vector3(.04,.018,-.065))
+			var knee_support: Vector3 = visitor.body.to_global(Vector3(-.19,.23,.31))
+			visitor.driver.hand_targets = {
+				"L": left_elbow.to_global(Vector3(0,-.36,0)).lerp(paper_edge,holding),
+				"R": right_elbow.to_global(Vector3(0,-.36,0)).lerp(knee_support,stoop)
+			}
 			for person in stage.actors:
 				if person.pose == "walk" and person.start.y<1.0 and t>8.75:
 					person.body.position = person.start+Vector3(8.75*.48,0,0)

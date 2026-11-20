@@ -27,6 +27,7 @@ func _start_time(index: int) -> float:
 func stop() -> void:
 	score.stop()
 	hide()
+	$Screen/View/Stage.end_film()
 
 func select_shot(index: int) -> void:
 	shot = index
@@ -54,14 +55,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	var stage = $Screen/View/Stage
 	stage.profile = profile
-	if office_take:
-		stage.frame(0,elapsed)
-	elif shot == 0 and elapsed < 5.35:
-		stage.frame(1,elapsed)
-	elif shot == 0:
-		stage.frame(0,remap(elapsed,5.35,SECONDS[0],1.7,SECONDS[0]))
-	else:
-		stage.frame(shot, elapsed)
+	stage.frame(shot,elapsed)
 	var font := get_theme_default_font()
 	var cues := SCRIPT.OFFICE_CUES if office_take else SCRIPT.cues(profile,shot)
 	var caption := String(cues[0][1])

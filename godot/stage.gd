@@ -71,86 +71,44 @@ func round_part(parent: Node3D, pos: Vector3, dims: Vector3, color: Color) -> No
 	node.scale = dims
 	return node
 
-func person(pos: Vector3, coat: Color, hair: Color, pose: String, yaw: float = 0, role := -1) -> Node3D:
-	var principal := coat == WOOD
-	var portrait := preload("res://office/cast_ada.tscn") if principal else preload("res://office/cast_nico.tscn")
-	var body := portrait.instantiate() as Node3D
-	set_root.add_child(body)
+const MARKS := preload("res://casting/archive_marks.tscn")
+const ARCHIVE_ACTOR := preload("res://casting/archive_actor.gd")
+const ARCHIVE_AGE := preload("res://casting/archive_age.gd")
+const LEADS := ["ada","nico","lea"]
+const AUDIENCE := ["extra_a","clerk","jo","extra_b","ivo","rosa"]
+const GALLERY := ["extra_c","extra_a"]
+const QUEUE := ["extra_d","nico","lea","extra_e","ada"]
+var cast_scenes := {}
+
+func person(pos: Vector3, identity: String, pose: String, yaw: float) -> Node3D:
+	var body := MARKS.instantiate() as Node3D
+	body.name = identity.to_pascal_case()
+	set_root.add_child(body,true)
 	body.position = pos
 	body.rotation.y = yaw
+	if not cast_scenes.has(identity):
+		cast_scenes[identity] = load("res://casting/%s.glb" % identity)
+	var model := (cast_scenes[identity] as PackedScene).instantiate() as Node3D
+	var player := ARCHIVE_ACTOR.new()
+	body.add_child(player)
+	player.bind(body,model,pose)
+	var face := model.find_child("ActorMesh",true,false) as MeshInstance3D
+	if scene_index in [7,8,9,12]:
+		ARCHIVE_AGE.apply(face,identity)
+	var face_parts: Array[MeshInstance3D] = [face]
 	var spine: Node3D = body.get_node("Spine")
-	var head: Node3D = spine.get_node("Head")
-	if role == 2:
-		var previous_face := head.get_node("Portrait")
-		head.remove_child(previous_face)
-		previous_face.free()
-		head.get_node("Accessory").free()
-		var portrait_lea := preload("res://cast/lea.glb").instantiate()
-		portrait_lea.name = "Portrait"
-		head.add_child(portrait_lea)
-	elif role < 0 and not principal:
-		head.get_node("Accessory").hide()
-	var arms := [spine.get_node("ShoulderL"), spine.get_node("ShoulderR")]
-	var legs: Array[Node3D] = []
-	var knees: Array[Node3D] = []
-	var lids: Array[MeshInstance3D] = []
-	var lips: Array[MeshInstance3D] = []
-	for feature: MeshInstance3D in head.get_node("Portrait").find_children("*","MeshInstance3D",true,false):
-		if feature.find_blend_shape_by_name("Blink") >= 0:
-			lids.append(feature)
-		if feature.find_blend_shape_by_name("Smile") >= 0:
-			lips.append(feature)
-	for part in body.find_children("*","MeshInstance3D",true,false):
-		for surface in part.mesh.get_surface_count():
-			var original: Material = part.mesh.surface_get_material(surface)
-			if original == null:
-				continue
-			var shade: Color
-			match original.resource_name:
-				"Capelli":
-					if role >= 0:
-						if scene_index not in [7,8,9,12]:
-							continue
-						shade = [Color("#625c59"),Color("#736b60"),Color("#73736e")][role]
-					else:
-						shade = hair
-				"Creste":
-					if role < 0 or scene_index not in [7,8,9,12]:
-						continue
-					shade = Color("#918c82")
-				"Ruggine","Bosco":
-					if role in [0,1]:
-						continue
-					shade = coat
-				_: continue
-			if not materials.has(shade):
-				var dye := StandardMaterial3D.new()
-				dye.albedo_color = shade
-				dye.roughness = .94
-				materials[shade] = dye
-			part.set_surface_override_material(surface,materials[shade])
-	# The ochre scarf ties the observing deck and transfer hall to the drawn archive.
-	if principal and scene_index in [1,3,8]:
-		var scarf := TorusMesh.new()
-		scarf.inner_radius = .084
-		scarf.outer_radius = .154
-		scarf.rings = 14
-		scarf.ring_segments = 5
-		var wrap := model(spine,Vector3(0,.61,.018),scarf,SUN)
-		wrap.scale = Vector3(1.06,.78,1)
-		var tail := block(spine,Vector3(-.095,.43,.178),Vector3(.095,.275,.026),SUN.darkened(.11))
-		tail.rotation.z = -.18
-	if pose == "walk":
-		body.get_node("Trousers").hide()
-		for side in [-1,1]:
-			var hip := joint(body,Vector3(side*.15,.93,0))
-			legs.append(hip)
-			round_part(hip,Vector3(0,-.19,0),Vector3(.26,.50,.29),BLUE)
-			var knee := joint(hip,Vector3(0,-.43,0))
-			knees.append(knee)
-			round_part(knee,Vector3(0,-.18,0),Vector3(.205,.45,.23),BLUE)
-			round_part(knee,Vector3(0,-.39,.056),Vector3(.22,.16,.35),INK)
-	actors.append({"body":body,"head":head,"spine":spine,"arms":arms,"legs":legs,"knees":knees,"lids":lids,"lips":lips,"pose":pose,"start":pos})
+	var arms := [spine.get_node("ShoulderL"),spine.get_node("ShoulderR")]
+	var legs := [body.get_node("HipL"),body.get_node("HipR")]
+	var knees := [legs[0].get_node("Knee"),legs[1].get_node("Knee")]
+	actors.append({"body":body,"spine":spine,"head":spine.get_node("Head"),"arms":arms,
+		"legs":legs,"knees":knees,"lids":face_parts,"lips":face_parts,
+		"driver":player,"identity":identity,"pose":pose,"start":pos})
+	if identity == "ada" and scene_index in [1,5,8]:
+		var attachment := player.socket("Neck") as Node3D
+		var scarf := preload("res://casting/scarf.gd").new()
+		attachment.add_child(scarf)
+		scarf.basis = player.socket_axes("Neck")
+		scarf.position = scarf.basis * Vector3(0,.01,.002)
 	return body
 
 func desk(x: float, z: float) -> void:
@@ -176,16 +134,12 @@ var built_profile := -1
 var archive_art: Node3D
 
 func lead(pos: Vector3, pose: String, yaw: float, role: int) -> Node3D:
-	var body := person(pos,[WOOD,TEAL,BLUE][role],[INK,WOOD,Color("#56575a")][role],pose,yaw,role)
-	if role == 2:
-		var stripe := block(body.get_node("Spine"),Vector3(-.11,.4,.151),Vector3(.03,.31,.02),WOOD)
-		stripe.rotation.z = -.23
-	return body
+	return person(pos,LEADS[role],pose,yaw)
 
 func frame(index: int, t: float) -> void:
 	if index != scene_index or profile != built_profile:
 		build_set(index)
-	if index == 0:
+	if index in [0,3]:
 		opening.frame(t)
 		return
 	for i in actors.size():
@@ -194,7 +148,7 @@ func frame(index: int, t: float) -> void:
 		var eyelid := fposmod(t+i*1.17,3.9 + .27*(i%3))
 		var blink := smoothstep(1.82,1.9,eyelid)*(1.0-smoothstep(1.9,2.025,eyelid))
 		for lid: MeshInstance3D in a.lids:
-			lid.set_blend_shape_value(0,blink)
+			lid.set_blend_shape_value(lid.find_blend_shape_by_name("Blink"),blink)
 		a.head.rotation.y = .16*sin(t*.9+i)
 		a.spine.rotation.z = .018*sin(t*1.4+i)
 		match a.pose:
@@ -230,13 +184,26 @@ func frame(index: int, t: float) -> void:
 	camera.position = eye + Vector3(.38*sin(t*.12),.08*sin(t*.2),-.055*t)
 	camera.look_at(target)
 	archive_art.frame(t)
+	for actor in actors:
+		if actor.body.is_visible_in_tree():
+			actor.driver.pose(t)
 
-func build_set(index: int) -> void:
+func clear_set() -> void:
 	for child in set_root.get_children():
 		set_root.remove_child(child)
 		child.queue_free()
 	actors.clear()
 	moving_props.clear()
+	opening = null
+	archive_art = null
+	scene_index = -1
+
+func end_film() -> void:
+	clear_set()
+	cast_scenes.clear()
+
+func build_set(index: int) -> void:
+	clear_set()
 	scene_index = index
 	built_profile = profile
 	var civic := index in [10,11,12]
@@ -254,14 +221,20 @@ func build_set(index: int) -> void:
 	camera.environment.fog_light_color = Color("#716981")
 	camera.environment.ambient_light_energy = lerpf(.7,.40,decline)
 	camera.environment.background_color = Color("#eacda3") if warm else BLUE.darkened(.5)
-	key.visible = index != 0
+	key.visible = index not in [0,3]
+	if index == 3:
+		# Play the same ward performance as the standalone screen test. The film owns the clock and score.
+		opening = load("res://casting/hospital.tscn").instantiate()
+		set_root.add_child(opening)
+		opening.set_process(false)
+		return
 	if index != 0:
 		camera.current = true
 		var ground := Color("#ac9170") if warm else BLUE
 		if index in [1,5]:
 			ground = Color("#545e65")
 		var floor_slab := block(set_root,Vector3(0,-.16,0),Vector3(45,.3,40),ground)
-		if index in [2,3,7,8,9]:
+		if index in [2,7,8,9]:
 			floor_slab.material_override = STONE_FLOOR
 	eye = Vector3(4,2.6,5)
 	target = Vector3(0,1,0)
@@ -279,59 +252,57 @@ func build_set(index: int) -> void:
 		0:
 			opening = preload("res://office/venerdi.tscn").instantiate()
 			set_root.add_child(opening)
-		4,9:
+		4:
+			# The laboratory places these two performers in the review bay.
+			lead(Vector3.ZERO,"type",PI,0)
+			lead(Vector3.ZERO,"point",0,2)
+		9:
 			block(set_root,Vector3(0,2.6,-17),Vector3(22,5.2,.3),TEAL)
 			for bay in range(-3,4):
 				block(set_root,Vector3(bay*2.9,2.6,-16.8),Vector3(2.5,2.7,.09),PAPER if warm else BLUE)
 				block(set_root,Vector3(bay*2.9,2.6,-16.72),Vector3(.08,2.7,.1),INK)
-			for row in range(3 if index != 9 else 6):
+			for row in range(6):
 				for col in range(-2,3):
 					desk(col*3.1,-row*2.8)
-			lead(Vector3(-.65,0,.8),"type",PI,profile if index == 9 else 0)
-			if index == 4:
-				lead(Vector3(.95,0,.65),"point",-.8,2)
-			else:
-				var supervisor := joint(set_root,Vector3(.68,1.59,.17))
-				supervisor.rotation.y = -.62
-				block(supervisor,Vector3(0,-.20,-.05),Vector3(.064,.45,.075),INK)
-				block(supervisor,Vector3.ZERO,Vector3(.27,.16,.22),BLUE)
-				round_part(supervisor,Vector3(0,.012,.12),Vector3(.097,.095,.065),INK)
-				block(supervisor,Vector3(.099,.041,.119),Vector3(.023,.023,.011),SUN)
+			lead(Vector3(-.65,0,.8),"type",PI,profile)
+			var supervisor := joint(set_root,Vector3(.68,1.59,.17))
+			supervisor.rotation.y = -.62
+			block(supervisor,Vector3(0,-.20,-.05),Vector3(.064,.45,.075),INK)
+			block(supervisor,Vector3.ZERO,Vector3(.27,.16,.22),BLUE)
+			round_part(supervisor,Vector3(0,.012,.12),Vector3(.097,.095,.065),INK)
+			block(supervisor,Vector3(.099,.041,.119),Vector3(.023,.023,.011),SUN)
 			book(Vector3(-.8,1,.25))
-			if index == 4:
-				eye = Vector3(6,5,7)
-			if index == 9:
-				var terminal := joint(set_root,Vector3(0,1.38,.19))
-				block(terminal,Vector3.ZERO,Vector3(1.12,.79,.20),INK)
-				block(terminal,Vector3(0,0,.112),Vector3(.94,.61,.04),Color("#372a26"))
-				var assignment := Label3D.new()
-				terminal.add_child(assignment)
-				assignment.position = Vector3(.116,0,.14)
-				assignment.pixel_size = .00118
-				assignment.font_size = 46
-				assignment.outline_size = 0
-				assignment.modulate = Color("#ffc675")
-				assignment.text = SCREENPLAY.BADGES[profile]+"  /  SHIFT 01\n\n"+SCREENPLAY.ORDERS[profile]+"\nTIME   07:00"
-				# One archive still becomes Ada's personal photo inside the terminal.
-				if profile == 0:
-					var photo := Sprite3D.new()
-					terminal.add_child(photo)
-					photo.texture = preload("res://archive.png")
-					photo.region_enabled = true
-					photo.region_rect = Rect2(4,5,269,245)
-					photo.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-					photo.pixel_size = .001
-					photo.position = Vector3(-.31,.012,.149)
-					block(terminal,Vector3(-.31,.012,.14),Vector3(.287,.264,.01),PAPER)
-				else:
-					block(terminal,Vector3(-.30,.012,.14),Vector3(.26,.23,.015),BLUE)
-					for i in range(3):
-						var x := -.38+.079*i
-						block(terminal,Vector3(x,.03+.025*(i%2),.157),Vector3(.045,.044,.006),SUN if profile==1 else PAPER)
-						if i<2:
-							block(terminal,Vector3(x+.041,.03,.157),Vector3(.05,.009,.006),PAPER)
-				eye = Vector3(.09,1.65,2.46)
-				target = Vector3(0,1.37,0)
+			var terminal := joint(set_root,Vector3(0,1.38,.19))
+			block(terminal,Vector3.ZERO,Vector3(1.12,.79,.20),INK)
+			block(terminal,Vector3(0,0,.112),Vector3(.94,.61,.04),Color("#372a26"))
+			var assignment := Label3D.new()
+			terminal.add_child(assignment)
+			assignment.position = Vector3(.116,0,.14)
+			assignment.pixel_size = .00118
+			assignment.font_size = 46
+			assignment.outline_size = 0
+			assignment.modulate = Color("#ffc675")
+			assignment.text = SCREENPLAY.BADGES[profile]+"  /  SHIFT 01\n\n"+SCREENPLAY.ORDERS[profile]+"\nTIME   07:00"
+			# One archive still becomes Ada's personal photo inside the terminal.
+			if profile == 0:
+				var photo := Sprite3D.new()
+				terminal.add_child(photo)
+				photo.texture = preload("res://archive.png")
+				photo.region_enabled = true
+				photo.region_rect = Rect2(4,5,269,245)
+				photo.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+				photo.pixel_size = .001
+				photo.position = Vector3(-.31,.012,.149)
+				block(terminal,Vector3(-.31,.012,.14),Vector3(.287,.264,.01),PAPER)
+			else:
+				block(terminal,Vector3(-.30,.012,.14),Vector3(.26,.23,.015),BLUE)
+				for i in range(3):
+					var x := -.38+.079*i
+					block(terminal,Vector3(x,.03+.025*(i%2),.157),Vector3(.045,.044,.006),SUN if profile==1 else PAPER)
+					if i<2:
+						block(terminal,Vector3(x+.041,.03,.157),Vector3(.05,.009,.006),PAPER)
+			eye = Vector3(.09,1.65,2.46)
+			target = Vector3(0,1.37,0)
 		1,5:
 			if profile != 0:
 				lead(Vector3(-.40,0,.27),"watch",.62,profile)
@@ -344,24 +315,15 @@ func build_set(index: int) -> void:
 					peak.radial_segments = 5
 					var mountain := model(set_root,Vector3(-21+i*3,.9,-10-i%3),peak,Color("#536878").darkened(.07*(i%3)))
 					mountain.rotation.y = i*.71
-				if index == 1:
-					lead(Vector3(-.85,0,.42),"point",.6,0)
-				else:
-					desk(-2,0)
+				lead(Vector3(-.85,0,.42),"watch",.6,0)
 				eye = Vector3(3,2.1,4.8)
-		2,3:
+		2:
 			for i in range(8):
 				var pos := Vector3(-8+i*2.3,0,-3-i%3)
 				block(set_root,pos+Vector3.UP,Vector3(.3,2,.33),WOOD)
 				round_part(set_root,pos+Vector3.UP*2.7,Vector3(2.2,2.6,2.1),TEAL)
-			if index == 2:
-				for i in range(6):
-					person(Vector3(i*.94-2.4,0,1+i%2),[TEAL,WOOD,BLUE][i%3],INK,"point",PI)
-			else:
-				lead(Vector3(-.60,0,0),"watch",PI/2,0)
-				person(Vector3(.60,0,0),Color("#637875"),Color("#b8b0a0"),"watch",-PI/2)
-				eye = Vector3(1,1.8,4)
-				target = Vector3(0,1.45,0)
+			for i in AUDIENCE.size():
+				person(Vector3(i*.94-2.4,0,1+i%2),AUDIENCE[i],"point",PI)
 		6:
 			for i in range(24):
 				var h := 2.0 + (i*7)%9
@@ -393,16 +355,20 @@ func build_set(index: int) -> void:
 				block(set_root,Vector3(0,rail_y,-1.29),Vector3(22,.045,.045),BLUE)
 			for post in range(-8,9):
 				block(set_root,Vector3(post*1.28,3.16,-1.29),Vector3(.042,.81,.042),INK)
-			for walker in range(3):
-				person(Vector3(-5+walker*2.7,2.86,-1.94),BLUE.darkened(.36),INK,"walk",PI/2)
+			for walker in GALLERY.size():
+				person(Vector3(-5+walker*4.2,2.86,-1.94),GALLERY[walker],"walk",PI/2)
 			if index == 7:
-				for i in range(9):
-					person(Vector3(1.7-i*1.32,0,.2*sin(i)),[BLUE,WOOD,TEAL][i%3],PAPER if i%3 == 0 else INK,"walk",PI/2)
+				for i in QUEUE.size():
+					person(Vector3(1.7-i*1.32,0,.2*sin(i)),QUEUE[i],"walk",PI/2)
 				eye = Vector3(4.6,1.02,7.4)
 				target = Vector3(.6,1.96,-1)
 			else:
 				lead(Vector3(0,0,0),"point",.6,profile)
 				var keepsake := book(Vector3(.58,1.23,.24)) if profile==0 else joint(set_root,Vector3(.58,1.23,.24))
+				if profile == 0:
+					keepsake.scale = Vector3.ONE*.70
+					block(keepsake,Vector3(.136,.052,0),Vector3(.018,.006,.535),INK)
+					block(keepsake,Vector3(-.07,.052,.13),Vector3(.135,.005,.071),PAPER)
 				if profile==1:
 					block(keepsake,Vector3.ZERO,Vector3(.39,.04,.24),TEAL)
 					for i in 3:

@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://office/dispatch.gd" id="Script"]
-[ext_resource type="PackedScene" path="res://cast/nico.glb" id="Face"]
+[ext_resource type="PackedScene" path="res://casting/ivo.glb" id="Ivo"]
 
 [sub_resource type="StandardMaterial3D" id="Midnight"]
 resource_name = "Midnight"
@@ -52,11 +52,6 @@ shading_mode = 0
 [sub_resource type="StandardMaterial3D" id="Paper"]
 resource_name = "Paper"
 albedo_color = Color(0.7843137254901961, 0.7333333333333333, 0.611764705882353, 1)
-roughness = 0.89
-
-[sub_resource type="StandardMaterial3D" id="Skin"]
-resource_name = "Skin"
-albedo_color = Color(0.7647058823529411, 0.5372549019607843, 0.4392156862745098, 1)
 roughness = 0.89
 
 [sub_resource type="StandardMaterial3D" id="Map"]
@@ -427,157 +422,9 @@ scale = Vector3(0.102, 0.082, 0.095)
 mesh = SubResource("Round")
 material_override = SubResource("Red")
 
-[node name="Dispatcher" type="Node3D" parent="."]
-position = Vector3(-0.65, 0, 0)
-
-[node name="Trousers" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(0, 0.65, 0)
-scale = Vector3(0.47, 0.8, 0.32)
-mesh = SubResource("Round")
-material_override = SubResource("Midnight")
-
-[node name="Tunic" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(0, 1.26, 0)
-scale = Vector3(0.61, 0.76, 0.37)
-mesh = SubResource("Round")
-material_override = SubResource("Uniform")
-
-[node name="Epaulet-1" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.176, 1.52, 0.05)
-scale = Vector3(0.187, 0.05, 0.17)
-rotation = Vector3(0, 0, 0.18)
-mesh = SubResource("Box")
-material_override = SubResource("Midnight")
-
-[node name="Insignia-1" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.167, 1.55, 0.06)
-scale = Vector3(0.086, 0.01, 0.15)
-rotation = Vector3(0, 0, 0.18)
-mesh = SubResource("Box")
-material_override = SubResource("Strip")
-
-[node name="Epaulet1" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(0.176, 1.52, 0.05)
-scale = Vector3(0.187, 0.05, 0.17)
-rotation = Vector3(0, 0, -0.18)
-mesh = SubResource("Box")
-material_override = SubResource("Midnight")
-
-[node name="Insignia1" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(0.167, 1.55, 0.06)
-scale = Vector3(0.086, 0.01, 0.15)
-rotation = Vector3(0, 0, -0.18)
-mesh = SubResource("Box")
-material_override = SubResource("Strip")
-
-[node name="Placket" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(0, 1.31, 0.179)
-scale = Vector3(0.025, 0.42, 0.017)
-mesh = SubResource("Box")
-material_override = SubResource("Midnight")
-
-[node name="Badge" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.135, 1.37, 0.182)
-scale = Vector3(0.123, 0.055, 0.015)
-mesh = SubResource("Box")
-material_override = SubResource("Strip")
-
-[node name="Head" type="Node3D" parent="Dispatcher"]
-position = Vector3(0, 1.77, 0)
-
-[node name="Portrait" parent="Dispatcher/Head" instance=ExtResource("Face")]
-
-[node name="Crown" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0, 0.244, -0.01)
-scale = Vector3(0.54, 0.225, 0.49)
-mesh = SubResource("Round")
-material_override = SubResource("Midnight")
-
-[node name="CapBand" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0, 0.158, 0.005)
-scale = Vector3(0.501, 0.080, 0.457)
-mesh = SubResource("Pipe")
-material_override = SubResource("Uniform")
-
-[node name="Peak" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0, 0.143, 0.167)
-scale = Vector3(0.427, 0.034, 0.225)
-mesh = SubResource("Round")
-material_override = SubResource("Frame")
-
-[node name="RailBadge" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0, 0.227, 0.222)
-scale = Vector3(0.068, 0.054, 0.014)
-mesh = SubResource("Box")
-material_override = SubResource("Strip")
-
-[node name="Earpad-1" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(-0.214, 0.01, -0.015)
-scale = Vector3(0.074, 0.124, 0.095)
-mesh = SubResource("Round")
-material_override = SubResource("Rubber")
-
-[node name="Earpad1" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0.214, 0.01, -0.015)
-scale = Vector3(0.074, 0.124, 0.095)
-mesh = SubResource("Round")
-material_override = SubResource("Rubber")
-
-[node name="MicArm" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0.187, -0.062, 0.105)
-scale = Vector3(0.016, 0.017, 0.213)
-rotation = Vector3(-0.48, 0, 0)
-mesh = SubResource("Box")
-material_override = SubResource("Frame")
-
-[node name="Mic" type="MeshInstance3D" parent="Dispatcher/Head"]
-position = Vector3(0.178, -0.102, 0.2)
-scale = Vector3(0.043, 0.036, 0.045)
-mesh = SubResource("Round")
-material_override = SubResource("Rubber")
-
-[node name="RestingSleeve" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.257, 1.29, 0.035)
-scale = Vector3(0.175, 0.39, 0.18)
-rotation = Vector3(0, 0, -0.09)
-mesh = SubResource("Round")
-material_override = SubResource("Uniform")
-
-[node name="RestingForearm" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.272, 1.104, 0.163)
-scale = Vector3(0.15, 0.15, 0.36)
-mesh = SubResource("Round")
-material_override = SubResource("Uniform")
-
-[node name="RestingHand" type="MeshInstance3D" parent="Dispatcher"]
-position = Vector3(-0.272, 1.107, 0.336)
-scale = Vector3(0.119, 0.08, 0.147)
-mesh = SubResource("Round")
-material_override = SubResource("Skin")
-
-[node name="Sleeve" type="MeshInstance3D" parent="."]
-position = Vector3(0, 1.2, 0.22)
-scale = Vector3(0.12, 0.12, 0.18)
-mesh = SubResource("Round")
-material_override = SubResource("Uniform")
-
-[node name="Forearm" type="MeshInstance3D" parent="."]
-position = Vector3(0, 1.2, 0.22)
-scale = Vector3(0.12, 0.12, 0.18)
-mesh = SubResource("Round")
-material_override = SubResource("Uniform")
-
-[node name="Cuff" type="MeshInstance3D" parent="."]
-position = Vector3(0, 1.2, 0.22)
-scale = Vector3(0.12, 0.12, 0.18)
-mesh = SubResource("Pipe")
-material_override = SubResource("Strip")
-
-[node name="Hand" type="MeshInstance3D" parent="."]
-position = Vector3(0, 1.2, 0.22)
-scale = Vector3(0.12, 0.12, 0.18)
-mesh = SubResource("Round")
-material_override = SubResource("Skin")
+[node name="Dispatcher" parent="." instance=ExtResource("Ivo")]
+position = Vector3(-0.55, 0, 0.015)
+rotation = Vector3(0, 0.24, 0)
 
 [node name="SignalGlow" type="OmniLight3D" parent="SignalBox"]
 position = Vector3(1.3, 2.3, -0.8)

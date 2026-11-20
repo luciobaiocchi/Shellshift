@@ -3,9 +3,21 @@
 [ext_resource type="Script" path="res://programmers.gd" id="1"]
 [ext_resource type="PackedScene" path="res://office/office_room.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://office/workstation.glb" id="3"]
-[ext_resource type="PackedScene" path="res://office/cast_ada.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://office/cast_nico.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://casting/ada.glb" id="4"]
+[ext_resource type="PackedScene" path="res://casting/nico.glb" id="5"]
 [ext_resource type="Animation" path="res://office/venerdi.tres" id="6"]
+
+[ext_resource type="Script" path="res://office/friday_performance.gd" id="7"]
+[ext_resource type="Script" path="res://casting/scarf.gd" id="8"]
+[ext_resource type="Shader" path="res://casting/film.gdshader" id="9"]
+
+[sub_resource type="QuadMesh" id="LensPlane"]
+size = Vector2(2,2)
+
+[sub_resource type="ShaderMaterial" id="LensMaterial"]
+resource_local_to_scene = true
+render_priority = -128
+shader = ExtResource("9")
 
 [sub_resource type="AnimationLibrary" id="Library"]
 _data = {&"Venerdi": ExtResource("6")}
@@ -39,16 +51,27 @@ modulate = Color(1, 0.73, 0.41, 1)
 text = "16:00"
 
 [node name="Ada" parent="." instance=ExtResource("4")]
-position = Vector3(-0.65, 0, -0.12)
+position = Vector3(-0.48, 0, -0.04)
+rotation = Vector3(0, 0.14, 0)
 
 [node name="Nico" parent="." instance=ExtResource("5")]
-position = Vector3(0.65, 0, -0.12)
+position = Vector3(0.23, 0, -0.067)
+rotation = Vector3(0, -0.32, 0)
+
+[node name="OchreScarf" type="MeshInstance3D" parent="."]
+script = ExtResource("8")
+
+[node name="Performance" type="Node3D" parent="."]
+script = ExtResource("7")
+
+[node name="Watch" type="Marker3D" parent="."]
 
 [node name="FinestraOvest" type="DirectionalLight3D" parent="."]
 rotation_degrees = Vector3(-40, -42, 0)
 light_color = Color(1, 0.92, 0.79, 1)
 light_energy = 0.66
 shadow_enabled = true
+shadow_opacity = 0.73
 directional_shadow_max_distance = 17.0
 
 [node name="WindowBounce" type="OmniLight3D" parent="."]
@@ -67,6 +90,13 @@ rotation_degrees = Vector3(-3.82074, 17.75101, 0)
 fov = 41.0
 near = 0.04
 current = true
+
+[node name="Lens" type="MeshInstance3D" parent="Camera"]
+position = Vector3(0,0,-0.20)
+extra_cull_margin = 10.0
+cast_shadow = 0
+mesh = SubResource("LensPlane")
+material_override = SubResource("LensMaterial")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries/ = SubResource("Library")

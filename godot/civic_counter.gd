@@ -280,31 +280,20 @@ var public_chair: Node3D
 var chair_start:=Vector3(-.62,0,-.35)
 var chair_end:=Vector3(-.71,0,.24)
 
-func actor(p: Vector3,coat: Color,hair: Color,yaw: float,identity: int = -1) -> Dictionary:
-	stage.person(to_global(p),coat,hair,"watch",yaw,identity)
+func actor(p: Vector3,identity: String,yaw: float) -> Dictionary:
+	stage.person(to_global(p),identity,"watch",yaw)
 	return stage.actors.back()
 
 func _cast() -> void:
-	rosa=actor(Vector3(.08,0,.93),Color("#a56755"),Color("#443733"),-.66,2)
-	mother=actor(Vector3(-.85,0,.94),Color("#617979"),Color("#bab4a7"),.64)
+	rosa=actor(Vector3(.08,0,.93),"rosa",-.66)
+	mother=actor(Vector3(-.85,0,.94),"rosa_mother",.64)
 	mother.body.scale=Vector3(.95,.93,.95)
-	clerk=actor(Vector3(-.64,0,-1.38),Color("#73858b"),Color("#5d4a40"),.18)
+	clerk=actor(Vector3(-.64,0,-1.38),"clerk",.18)
 	clerk.body.scale=Vector3(.98,.98,.98)
-	# Wrist cuff, staff pocket and a horn button under the older woman's chin.
-	box(rosa.spine,Vector3(-.126,.398,.158),Vector3(.085,.066,.014),CREAM)
-	box(rosa.spine,Vector3(-.126,.398,.170),Vector3(.056,.013,.008),RED)
-	box(clerk.spine,Vector3(.132,.383,.155),Vector3(.105,.055,.017),CREAM)
-	var scarf:=TorusMesh.new()
-	scarf.inner_radius=.080
-	scarf.outer_radius=.149
-	scarf.rings=14
-	scarf.ring_segments=6
-	stage.model(mother.spine,Vector3(0,.616,.011),scarf,Color("#ac7e51"))
-	box(mother.spine,Vector3(.095,.488,.151),Vector3(.067,.18,.031),Color("#9b714e")).rotation.z=.17
-	bystanders.append(actor(Vector3(-2.90,0,.45),Color("#696e83"),Color("#646056"),2.72))
-	bystanders.append(actor(Vector3(-2.38,0,1.35),Color("#7b754f"),Color("#3c3b39"),-2.83))
-	bystanders.append(actor(Vector3(-3.37,0,2.73),Color("#815d52"),Color("#b2ab91"),2.80))
-	bystanders.append(actor(Vector3(.28,0,2.91),Color("#707a85"),Color("#574b41"),-2.74))
+	bystanders.append(actor(Vector3(-2.90,0,.45),"extra_a",2.72))
+	bystanders.append(actor(Vector3(-2.38,0,1.35),"extra_b",-2.83))
+	bystanders.append(actor(Vector3(-3.37,0,2.73),"ivo",2.80))
+	bystanders.append(actor(Vector3(.28,0,2.91),"jo",-2.74))
 	public_chair=joint(self,chair_start)
 	public_chair.name="WaitingChair"
 	box(public_chair,Vector3(0,.529,.01),Vector3(.422,.042,.381),OAK)

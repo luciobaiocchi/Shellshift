@@ -21,6 +21,8 @@ var handset: Node3D
 var paper: Node3D
 var pilot_lamps: Array[Node3D] = []
 var book_lid: Node3D
+var second_cup: Node3D
+var remote_switch: Node3D
 var readout: Label3D
 var indicator: Node3D
 var lead_smiles: Array[MeshInstance3D] = []
@@ -38,17 +40,10 @@ func build(host, first: bool) -> void:
 	else:
 		_room()
 	if not lead.is_empty():
-		lead_smiles = _mouth(lead)
+		lead_smiles = lead.lips
 	if not partner.is_empty():
-		partner_smiles = _mouth(partner)
+		partner_smiles = partner.lips
 	frame(0)
-
-func _mouth(actor: Dictionary) -> Array[MeshInstance3D]:
-	var parts: Array[MeshInstance3D] = []
-	for m in actor.head.find_children("*","MeshInstance3D",true,false):
-		if m.find_blend_shape_by_name("Smile")>=0:
-			parts.append(m)
-	return parts
 
 func _smile(parts: Array[MeshInstance3D], amount: float) -> void:
 	for part in parts:
@@ -101,11 +96,8 @@ func stool(p: Vector3, yaw: float) -> Node3D:
 	box(obj,Vector3(0,.956,-.17),Vector3(.341,.120,.035),WOOD).rotation.x = -.13
 	return obj
 
-func cup(parent: Node3D, p: Vector3, reversed: bool, chipped: bool) -> void:
+func cup(parent: Node3D, p: Vector3, chipped: bool) -> Node3D:
 	var obj := point(parent,p)
-	if reversed:
-		obj.rotation.x = PI
-		obj.position.y += .148
 	rod(obj,Vector3.ZERO,Vector3.UP*.135,.060,CREAM,.077)
 	rod(obj,Vector3.UP*.135,Vector3.UP*.141,.077,CREAM)
 	rod(obj,Vector3.UP*.141,Vector3.UP*.143,.063,Color("#4c3933"))
@@ -120,6 +112,7 @@ func cup(parent: Node3D, p: Vector3, reversed: bool, chipped: bool) -> void:
 		var chip := box(obj,Vector3(.022,.136,.070),Vector3(.029,.018,.012),Color("#704933"))
 		chip.rotation.z = .49
 		rod(obj,Vector3.UP*.039,Vector3.UP*.052,.065,RUST,.067)
+	return obj
 
 func _lamp(p: Vector3) -> void:
 	var o := point(self,p)
@@ -163,26 +156,22 @@ func _roof() -> void:
 	box(ledge,Vector3.ZERO,Vector3(.92,.047,.43),WOOD)
 	for x in [-.38,.38]:
 		rod(ledge,Vector3(x,-.863,.04),Vector3(x,-.025,.04),.022,IRON)
-	cup(ledge,Vector3(-.12,.026,.062),not early,true)
-	cup(ledge,Vector3(.19,.026,-.008),false,false)
+	second_cup = cup(ledge,Vector3(-.12,.026,.062),true)
+	cup(ledge,Vector3(.19,.026,-.008),false)
 	_lamp(ledge.position+Vector3(-.34,.025,-.065))
 	paper = _notebook()
 	practical(Vector3(-1.94,1.59,.84),Color("#ffd09b"),early_default(.62,.33),3.8)
 	if early:
 		lead.body.position=to_global(Vector3(-.04,0,.32))
-		stage.person(to_global(Vector3(-1.01,0,-.16)),Color("#637875"),Color("#b8b0a0"),"watch",.82)
+		stage.person(to_global(Vector3(-1.01,0,-.16)),"mara","watch",.82)
 		partner = stage.actors.back()
-		box(partner.spine,Vector3(.12,.44,.16),Vector3(.041,.038,.017),BRASS)
-		var shawl := TorusMesh.new()
-		shawl.inner_radius=.090
-		shawl.outer_radius=.169
-		shawl.rings=16
-		shawl.ring_segments=5
-		stage.model(partner.spine,Vector3(0,.606,.018),shawl,Color("#746579"))
 	else:
-		var panel := point(self,Vector3(-1.98,1.32,-.20))
+		lead.body.position = to_global(Vector3(-.99,0,.27))
+		var panel := point(self,Vector3(-1.64,1.24,.32))
 		box(panel,Vector3.ZERO,Vector3(.52,.37,.13),IRON)
 		box(panel,Vector3(0,0,.075),Vector3(.47,.31,.025),INK)
+		remote_switch = point(panel,Vector3(.192,-.098,.10))
+		box(remote_switch,Vector3.ZERO,Vector3(.050,.035,.021),BRASS)
 		readout = plate(panel,Vector3(0,.01,.096),"REMOTE LINK",.044,BRASS)
 
 func _notebook() -> Node3D:
@@ -353,10 +342,11 @@ func _room() -> void:
 			box(paper,Vector3(x,.008,.043),Vector3(.143,.004,.009),IRON)
 		rod(paper,Vector3(-.07,.018,.07),Vector3(.12,.018,-.07),.011,INK)
 		if early:
-			stage.person(to_global(Vector3(.83,0,-.38)),Color("#955d51"),Color("#5a463f"),"watch",-.72)
+			stage.person(to_global(Vector3(.83,0,-.38)),"jo","watch",-.72)
 			partner = stage.actors.back()
 
 func _reach(actor: Dictionary, side: int, world_target: Vector3, bend: Vector3) -> void:
+	actor.driver.hand_targets["L" if side == 1 else "R"] = world_target
 	var upper: Node3D=actor.arms[side]
 	var fore: Node3D=upper.get_node("Elbow")
 	var desired := (upper.get_parent() as Node3D).to_local(world_target)-upper.position
@@ -413,11 +403,28 @@ func _roof_frame(t: float) -> void:
 			_camera(Vector3(-.31,1.57,1.37),Vector3(-.88,.935,.57))
 			_reach(partner,1,to_global(Vector3(-.89,.95,.61)),Vector3(.86,-.22,.03))
 	else:
-		if t>5.6:
-			_camera(Vector3(-.08,1.43,1.96),Vector3(-1.02,1.01,.40))
-		if t>10.4:
-			_camera(Vector3(.14,1.58,2.38),Vector3(-1.60,1.42,-.36))
-		readout.text="REMOTE LINK" if t<9.6 else "ONLY   2 / 3"
+		# Her hand still turns the chipped handle towards the empty stool.
+		var turn_cup := smoothstep(.7,3.1,t)
+		var let_go := smoothstep(3.45,5.3,t)
+		var handover := smoothstep(6.0,9.2,t)
+		var release := smoothstep(9.6,11.3,t)
+		second_cup.rotation.y = -.88*turn_cup
+		lead.body.rotation.y = lerpf(.37,-1.0,handover)
+		lead.spine.rotation.x = .16-.10*let_go
+		lead.head.rotation.x = .36-.28*let_go+.12*handover
+		lead.head.rotation.y = .10+.46*let_go-.86*handover
+		var handle := second_cup.to_global(Vector3(.08,.077,0))
+		var rest: Vector3 = lead.body.to_global(Vector3(-.28,.98,.13))
+		var reach := handle.lerp(rest,let_go)
+		var button := remote_switch.to_global(Vector3(0,0,.022))
+		reach = reach.lerp(button,handover).lerp(rest,.82*release)
+		_reach(lead,0,reach,Vector3(-.78,-.42,.23))
+		if t>4.6:
+			_camera(Vector3(-.22,1.43,1.98),Vector3(-1.05,1.06,.46))
+		if t>7.15:
+			_camera(Vector3(-2.19,1.53,2.26),Vector3(-1.29,1.34,.29))
+		remote_switch.position.z = .10-.012*(smoothstep(8.95,9.22,t)-smoothstep(9.65,10.0,t))
+		readout.text="REMOTE LINK" if t<9.22 else "ONLY   2 / 3"
 	scope.rotation.y=2.28-.29*smoothstep(5.8,9.50,t) if not early else 2.28
 	scope.rotation.x=-.48+.11*smoothstep(5.8,9.50,t) if not early else -.48
 
@@ -434,10 +441,11 @@ func _room_frame(t: float) -> void:
 	if relay:
 		readout.text = ("CHANNEL   03\nBROTHER CALLING" if t<1.7 else "CHANNEL   03\nLINE OPEN") if early else ("NIGHT SHIFT\nLINE OPEN" if t<4.1 else "NIGHT SHIFT\nCALLS MUTED")
 		var rest := Vector3(-.17,1.159,.56)
-		var ear := to_local(lead.head.to_global(Vector3(.20,-.07,.13)))
+		var earpiece := Vector3(.12,.035,0).rotated(Vector3.BACK,1.32)
+		var ear := to_local(lead.driver.ear_world("L")) - earpiece
 		handset.position = rest.lerp(ear,amp if early else 1.-leave)
 		handset.rotation.z = lerpf(.14,1.32,amp if early else 1.-leave)
-		_reach(lead,1,handset.global_position+Vector3(0,-.035,.055),Vector3(.86,-.22,.03))
+		_reach(lead,1,handset.to_global(Vector3(0,-.018,.012)),Vector3(.86,-.22,.03))
 		_smile(lead_smiles,.77*amp if early else .25*(1.-leave))
 		if t>5.2:
 			if early:

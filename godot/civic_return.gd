@@ -221,7 +221,7 @@ func bus_interior() -> void:
 	street_set.add_child(fill)
 	fill.position = Vector3(-.2,1.76,.98)
 	fill.light_color = Color("#e9d2b5")
-	fill.light_energy = .81
+	fill.light_energy = .44
 	fill.light_specular = 0
 	fill.omni_range = 4.2
 	fill.omni_attenuation = 1.3
@@ -253,9 +253,13 @@ func hand(actor: Dictionary, side: int, target: Vector3) -> void:
 
 func smile(actor: Dictionary, ease: float) -> void:
 	for lips: MeshInstance3D in actor.lips:
-		lips.set_blend_shape_value(0,ease)
+		lips.set_blend_shape_value(lips.find_blend_shape_by_name("Smile"),ease)
 
 func frame(t: float) -> void:
+	# Riding places the pelvis on the seat in the authored root translation.
+	for actor in [rosa,mother]:
+		actor.driver.seated = not late and t >= 16.55
+		actor.driver.seat_drop = 0.0
 	if late:
 		closing(t)
 	else:

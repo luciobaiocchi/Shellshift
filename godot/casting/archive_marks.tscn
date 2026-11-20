@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[node name="Marks" type="Node3D"]
+
+[node name="Trousers" type="Node3D" parent="."]
+
+[node name="Spine" type="Node3D" parent="."]
+position = Vector3(0, 0.91, 0)
+
+[node name="Head" type="Node3D" parent="Spine"]
+position = Vector3(0, 0.87, 0)
+
+[node name="ShoulderL" type="Node3D" parent="Spine"]
+position = Vector3(-0.278, 0.535, 0)
+
+[node name="Elbow" type="Node3D" parent="Spine/ShoulderL"]
+position = Vector3(0, -0.337, 0)
+rotation = Vector3(-0.36, 0, 0)
+
+[node name="ShoulderR" type="Node3D" parent="Spine"]
+position = Vector3(0.278, 0.535, 0)
+
+[node name="Elbow" type="Node3D" parent="Spine/ShoulderR"]
+position = Vector3(0, -0.337, 0)
+rotation = Vector3(-0.36, 0, 0)
+
+[node name="HipL" type="Node3D" parent="."]
+position = Vector3(-0.15, 0.93, 0)
+
+[node name="Knee" type="Node3D" parent="HipL"]
+position = Vector3(0, -0.43, 0)
+
+[node name="HipR" type="Node3D" parent="."]
+position = Vector3(0.15, 0.93, 0)
+
+[node name="Knee" type="Node3D" parent="HipR"]
+position = Vector3(0, -0.43, 0)
