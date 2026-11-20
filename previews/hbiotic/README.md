@@ -8,6 +8,26 @@ La biologa torna indietro per salutare Xiv-83. La macchina si accorge che è la 
 
 ![La biologa si volta verso Xiv-83 nel laboratorio](buonanotte.png)
 
+### Provino in Blender
+
+[Guarda il filmato con audio](buonanotte-demo.mp4) · [Apri le scene in Blender](buonanotte-demo.blend)
+
+Il provino dura 4,75 secondi a 24 fotogrammi al secondo. Si accende la spia di Xiv. Sul rumore della ventola, la biologa alza appena gli occhi. La testa segue lo sguardo e la coda si assesta. L’attaccatura resta ancorata al cranio. Le lunghezze raccolte e i ciuffi alle tempie rispondono alla rotazione con due movimenti elastici distinti, registrati nella timeline.
+
+Tieni l’MP4 accanto al file Blender. **Playback** apre una copia del filmato al fotogramma 40. Con il puntatore sull’anteprima, **Maiusc + ←** torna all’inizio e **Spazio** riproduce il filmato con l’audio. **Set 3D** apre il laboratorio e il personaggio in una vista leggera con un quinto dei capelli. Il render usa tutti i filamenti. **Edit** contiene le due inquadrature originali e il suono del laboratorio. Le texture e l’audio sono incorporati nel progetto.
+
+La testa e le mappe della pelle derivano da *Female Head Textured* di Dessen. Per il provino sono stati adattati l’incarnato, le iridi blu ardesia, le palpebre e l’espressione. [Modello originale](https://sketchfab.com/3d-models/female-head-textured-e774147bf2224e6f83ec89f67ec2ecb6) · [Licenza CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+Il corpo e gli abiti derivano da *Business Female 01* di Microsoft Rocketbox. La posa, il collo della camicia e i materiali sono stati adattati al personaggio. Le ciocche, il laboratorio, il terminale e il suono sono stati costruiti per questa scena. [Modello originale](https://github.com/microsoft/Microsoft-Rocketbox/tree/0943055db6ec570bcef9f2c8b41c9e5467c808f9/Assets/Avatars/Professions/Business_Female_01) · [Licenza MIT](../../godot/casting/LICENSE-Rocketbox.txt)
+
+### Prove di voce in inglese
+
+[Il lunedì a Hbiotic, 10,4 secondi](hbiotic-monday.wav). “That Monday, a paper landed in my inbox. I meant to read it. What I remember is my lab partner asking if I could cover Saturday.”
+
+[Il saluto a Xiv, 2 secondi](buonanotte-voce.wav). “I forgot to say goodnight.”
+
+Entrambe le tracce sono voci isolate per il montaggio. Sono state generate in locale con il preset Serena di Qwen3-TTS-12Hz-0.6B-CustomVoice, revisione `85e237c12c027371202489a0ec509ded67b5e4b5`, e salvate in WAV mono a 24 kHz e 24 bit. Il video contiene il missaggio originale della ventola e del relè. [Scheda del modello e licenza Apache 2.0](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice)
+
 ## I due caffè
 
 La biologa porta una notizia alla collega. Ha già posato il secondo caffè quando vede il posto vuoto.
