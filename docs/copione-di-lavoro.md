@@ -1,6 +1,6 @@
 # Shellshift · Il posto al finestrino
 
-Bozza per la lettura con l’autore. Le battute in inglese sono proposte. Il [copione del film già montato](screenplay.md) e il [libro di continuità](plot.md) descrivono la versione giocabile.
+Prima stesura. Conserva gli esperimenti sul turno, sulla satira degli incarichi e sugli ingressi di scena. Il [nuovo copione narrato da Rosa](arco-narrativo.md) e le [schede dei personaggi](personaggi.md) sono i testi per la prossima lettura.
 
 ## Due posti sul dodici
 
