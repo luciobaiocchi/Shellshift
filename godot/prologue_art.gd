@@ -80,26 +80,7 @@ func campaign() -> void:
 	stage.target = Vector3(0,2.12,-.8)
 
 func discharge() -> void:
-	stage.key.light_energy = .61
-	stage.camera.environment.ambient_light_energy = .61
-	box(self,Vector3(0,1.47,-2.02),Vector3(8.8,2.95,.3),Color("#969d8f"))
-	for x in [-3.73,-2.45,2.45,3.73]:
-		box(self,Vector3(x,1.8,-1.84),Vector3(1.08,1.48,.06),GLASS)
-		box(self,Vector3(x,1.71,-1.79),Vector3(1.08,.045,.04),IVORY)
-		box(self,Vector3(x,1.8,-1.79),Vector3(.04,1.48,.04),IVORY)
-	box(self,Vector3(0,1.08,-1.79),Vector3(2.43,2.16,.12),INK)
-	for x in [-.59,.59]:
-		box(self,Vector3(x,.99,-1.70),Vector3(1.14,1.94,.07),MINT)
-		box(self,Vector3(x,1.44,-1.65),Vector3(.81,.7,.04),GLASS)
-		box(self,Vector3(x,.9,-1.61),Vector3(.84,.045,.05),IVORY)
-	box(self,Vector3(0,2.45,-1.69),Vector3(3.1,.45,.12),GLASS)
-	text_plate(self,Vector3(0,2.45,-1.615),"WARD   /   EXIT",.17)
-	for x in [-1.9,1.9]:
-		rod(self,Vector3(x,.02,-1),Vector3(x,.69,-1),.068,GLASS)
-	box(self,Vector3(1.45,.26,.1),Vector3(.41,.46,.24),COPPER)
-	rod(self,Vector3(1.34,.55,.10),Vector3(1.55,.55,.10),.023,INK)
-	for x in [1.34,1.55]:
-		rod(self,Vector3(x,.47,.10),Vector3(x,.55,.1),.016,INK)
+	hospital_exterior()
 	# The same brass pin is visible when Mara keeps a seat for Ada at the dome.
 	narrator = stage.actors.back()
 	daughter = stage.actors[0]
@@ -110,6 +91,30 @@ func discharge() -> void:
 	text_plate(paperwork,Vector3(0,.004,.004),"RETURN",.019,INK)
 	for i in 7:
 		box(paperwork,Vector3(-.058+i*.013,-.021,.004),Vector3(.005,.012,.002),INK)
+
+func hospital_exterior(glazing: Material = null) -> void:
+	stage.key.light_energy = .61
+	stage.camera.environment.ambient_light_energy = .61
+	box(self,Vector3(0,1.47,-2.02),Vector3(8.8,2.95,.3),Color("#969d8f"))
+	for x in [-3.73,-2.45,2.45,3.73]:
+		var window := box(self,Vector3(x,1.8,-1.84),Vector3(1.08,1.48,.06),GLASS)
+		if glazing: window.material_override = glazing
+		box(self,Vector3(x,1.71,-1.79),Vector3(1.08,.045,.04),IVORY)
+		box(self,Vector3(x,1.8,-1.79),Vector3(.04,1.48,.04),IVORY)
+	box(self,Vector3(0,1.08,-1.79),Vector3(2.43,2.16,.12),INK)
+	for x in [-.59,.59]:
+		box(self,Vector3(x,.99,-1.70),Vector3(1.14,1.94,.07),MINT)
+		var pane := box(self,Vector3(x,1.44,-1.65),Vector3(.81,.7,.04),GLASS)
+		if glazing: pane.material_override = glazing
+		box(self,Vector3(x,.9,-1.61),Vector3(.84,.045,.05),IVORY)
+	box(self,Vector3(0,2.45,-1.69),Vector3(3.1,.45,.12),GLASS)
+	text_plate(self,Vector3(0,2.45,-1.615),"WARD   /   EXIT",.17)
+	for x in [-1.9,1.9]:
+		rod(self,Vector3(x,.02,-1),Vector3(x,.69,-1),.068,GLASS)
+	box(self,Vector3(1.45,.26,.1),Vector3(.41,.46,.24),COPPER)
+	rod(self,Vector3(1.34,.55,.10),Vector3(1.55,.55,.10),.023,INK)
+	for x in [1.34,1.55]:
+		rod(self,Vector3(x,.47,.10),Vector3(x,.55,.1),.016,INK)
 	var awning := box(self,Vector3(0,2.82,-1.23),Vector3(5.8,.15,1.6),INK)
 	awning.material_override = stage.STEEL
 	for x in [-1.8,1.8]:

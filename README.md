@@ -8,6 +8,8 @@ Il capitolo attraversa il film iniziale, il turno sul desktop, la mappa di manut
 
 Il prologo dura 3 minuti e 13 secondi. Comincia con Rosa e sua madre in fila allo sportello comunale. Per vederlo subito con il fascicolo di Ada esegui `godot --path godot -- --prologo`. La scena dei programmatori si può aprire da sola in Godot con `godot/office/venerdi.tscn`. F6 riproduce la sua animazione.
 
+Nel [provino di Ada e Mara](previews/provino-ada-mara.mp4), Mara esce dal reparto, sistema la sciarpa di Ada e la abbraccia. È un provino di casting separato dal prologo, con due interpreti della [libreria Rocketbox](godot/casting/SOURCES.md). La [scena Godot](godot/casting/hospital.tscn) si riproduce con F6. Per registrare di nuovo i 15 secondi con la musica originale esegui `python3 tools/render_casting.py` dalla radice del progetto con Godot e FFmpeg disponibili.
+
 ## Prototipo browser · Settore Nero
 
 Avventura single-player per browser. Nella cartella estratta, esegui `python3 serve.py` e apri http://127.0.0.1:8000. Il settore 3D richiede WebGL. Il pacchetto contiene il motore e tutti i dati della missione.
